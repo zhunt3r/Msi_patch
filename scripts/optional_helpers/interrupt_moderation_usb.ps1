@@ -229,7 +229,7 @@ function Get-All-Interrupters {
 }
 
 function Execute-IMOD-Process {
-	Write-Host "Started disabling interrupt moderation in all usb controllers"
+	Write-Host "Started disabling Interrupt Moderation (XHCI) or Interrupt Threshold Control (EHCI) in all USB controllers"
 	[Environment]::NewLine
 
 	$USBControllers = Get-All-USB-Controllers
