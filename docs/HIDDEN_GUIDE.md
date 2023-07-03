@@ -10,6 +10,6 @@ Could also be due to network buffering <https://forums.blurbusters.com/viewtopic
 
 <https://github.com/jagt/clumsy> Seems to be a windows option to delay packets.
 
-> It would be great if this was dealt or at least mitigated by the game developers.
+> It would be great if this was dealt or at least mitigated by the game developers. <https://forums.blurbusters.com/viewtopic.php?f=10&t=12201&p=95357#p95357>
 
 ---
