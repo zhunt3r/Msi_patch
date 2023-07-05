@@ -1,14 +1,14 @@
 :: In case some installers are not working through click or winget, e.g., .msixbundle, .appinstaller, .appx, .appxbundle, some packages from winget.
 
-:: I dont know all the things in all the tweaks+debloat that would cause this to break, If someone wants to find out, in the simplest and cleanest way and make a PR. Try to get it working with the minimum enabled.
-
-:: Try to build a sort of toggle in this, so each time you run the script, it will enable or disable everything that it end up going through here.
-
-:: WIP
+:: WIP - Remove this line and everything below the divider, once a solution is found and built.
 
 :: ------------------------------------------------------------------------
 
 :: WIP Notes
+
+:: I dont know all the things in all the tweaks+debloat that would cause this to break, If someone wants to find out, in the simplest and cleanest way and make a PR. Try to get it working with the minimum enabled.
+
+:: Try to build a sort of toggle in this, so each time you run the script, it will enable or disable everything that it end up going through here.
 
 :: sc query service_name
 
@@ -17,7 +17,7 @@
 :: sc config DoSvc start= delayed-auto
 
 :: Does not exist on Win11
-:: sc config uhssvc start= delayed-auto 
+:: sc config uhssvc start= delayed-auto
 
 :: sc config UsoSvc start= auto
 :: sc config WaaSMedicSVC start= demand
@@ -56,7 +56,7 @@
 
 :: Commands like these do not work to restore what is already removed, because it seems to use windows update to restore, if it's already disabled/removed, then is why does not work.
 :: sfc/scannow
-:: DISM /Online /Cleanup-Image /RestoreHealth 
+:: DISM /Online /Cleanup-Image /RestoreHealth
 :: If you have Windows in a disk/usb, you can point to it instead. Change G: to where windows installation is in.
 :: DISM /Online /Cleanup-Image /RestoreHealth /Source:G:\Sources\install.wim /LimitAccess
 :: I have tried both of these options, it did not work.
