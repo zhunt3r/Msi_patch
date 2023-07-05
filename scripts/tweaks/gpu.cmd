@@ -81,7 +81,7 @@ REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\nvlddmkm\FTS" /v E
 :: Graphics Driver scheduler tweaks
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\GraphicsDrivers\Scheduler" /v VsyncIdleTimeout /t REG_DWORD /d 0 /f
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\GraphicsDrivers\Scheduler" /v EnablePreemption /t REG_DWORD /d 0 /f
-:: Cause the FPS to be locked to refresh rate, at least in Win11
+:: Cause the FPS to be locked to refresh rate, at least in Win11. But it should bring benefits to window mode at least. https://github.com/dougg0k/gaming_os_tweaker/issues/13#issuecomment-1620610076
 :: REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\GraphicsDrivers\Scheduler" /v ForceFlipTrueImmediateMode /t REG_DWORD /d 1 /f
 
 :: Graphics drivers tweaks
