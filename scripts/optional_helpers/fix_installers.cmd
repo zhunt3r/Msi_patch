@@ -33,6 +33,8 @@
 :: net start wlidsvc
 :: net start WSService :: Maybe it was removed too, it was invalid when I tried
 
+:: Microsoft Store Installer Service needs to be running to install msixbundle - https://rentry.co/gaydia
+
 :: net start InstallService :: Was kept default manual
 :: net start PushToInstall :: Was kept default manual - But in my case, was removed by mistake.
 :: net start DcomLaunch :: Was kept default auto, to not break other dependent parts.

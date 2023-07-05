@@ -47,7 +47,7 @@ REG ADD "HKEY_CURRENT_USER\Software\NVIDIA Corporation\Global\NVTweak" /v Gestal
 REG ADD "HKEY_CURRENT_USER\Software\NVIDIA Corporation\Global\NVTweak" /v DisplayPowerSaving /t REG_DWORD /d 0 /f
 
 :: Disable HDCP
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Class\%GPU_DEVICE_CLASS_GUID_WITH_KEY%" /v RMHdcpKeyglobZero /t "REG_DWORD" /d 1 /f
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Class\%GPU_DEVICE_CLASS_GUID_WITH_KEY%" /v RMHdcpKeyglobZero /t REG_DWORD /d 1 /f
 
 :: DirectX tweaks
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Direct3D" /v DisableVidMemVBs /t REG_DWORD /d 0 /f
@@ -139,7 +139,6 @@ REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" /v
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" /v EnableSCGMidBufferPreemption /t REG_DWORD /d 0 /f
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" /v FlTransitionLatency /t REG_DWORD /d 0 /f
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" /v GPUPreemptionLevel /t REG_DWORD /d 0 /f
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" /v MonitorRefreshLatencyTolerance /t REG_DWORD /d 2710 /f
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" /v PerfAnalyzeMidBufferPreemption /t REG_DWORD /d 0 /f
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" /v PreferSystemMemoryContiguous /t REG_DWORD /d 1 /f
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" /v RmClkPowerOffDramPllWhenUnused /t REG_DWORD /d 0 /f
@@ -392,22 +391,16 @@ REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Class\%GPU_DEVICE_C
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Class\%GPU_DEVICE_CLASS_GUID_WITH_KEY%\PowerSettings" /v IdlePowerState /t REG_DWORD /d 00000000 /f
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Class\%GPU_DEVICE_CLASS_GUID_WITH_KEY%\PowerSettings" /v PerformanceIdleTime /t REG_DWORD /d 00000000 /f
 
-:: Setup bit from monitor
-:: echo HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\nvlddmkm\State\DisplayDatabase\%YOUR_DISPLAY_NAME% [3] >permissions.txt
-:: REGINI permissions.txt
-:: del permissions.txt
+:: Set Dithering on Nvidia - Temporal
 :: USE BASED IN YOUR MONITOR - Below is 8-bit Temporal and 10-bit Temporal is db010000101010204f4000000
-:: REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\nvlddmkm\State\DisplayDatabase\%YOUR_DISPLAY_NAME%" /v DitherRegistryKey /t REG_BINARY /d db010000101010104f3000000 /f
+:: https://hub.displaycal.net/forums/topic/how-to-enable-dithering-on-nvidia-geforce-with-windows-os/
+:: call ..\optional_helpers\run_minsudo "REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\nvlddmkm\State\DisplayDatabase\%YOUR_DISPLAY_NAME%" /v DitherRegistryKey /t REG_BINARY /d db010000101010104f3000000 /f"
 
-:: Set scaling to No Scaling in Nvidia Control Panel
-:: TODO: Find a way to automate this
-:: https://docs.google.com/spreadsheets/d/1ZWQFycOWdODkUOuYZCxm5lTp08V2m7gjZQSCjywAsl8/edit#gid=168557452 - Another good tweak to have would be "Override the scaling mode"
-:: REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\GraphicsDrivers\Configuration\%YOUR_CURRENT_DISPLAY_SETUP%\00\00" /v Scaling /t REG_DWORD /d 2 /f
-
-:: Disable display scaling
+:: Set No Scaling in Nvidia Control Panel
 for /f %%i in ('REG QUERY "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" /s /f Scaling') do set "str=%%i" & if "!str!" neq "!str:Configuration\=!" (
 	REG ADD "%%i" /v Scaling /t REG_DWORD /d 1 /f
 )
+:: https://docs.google.com/spreadsheets/d/1ZWQFycOWdODkUOuYZCxm5lTp08V2m7gjZQSCjywAsl8/edit#gid=168557452 - Another good tweak to have would be "Override the scaling mode"
 
 :: Tweak directx driver service
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\DXGKrnl" /v MonitorLatencyTolerance /t REG_DWORD /d 1 /f
