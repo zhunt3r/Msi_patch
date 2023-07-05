@@ -7,6 +7,8 @@
 
   https://learn.microsoft.com/en-us/windows/win32/procthread/scheduling-priorities
 
+  -------------------------
+
   In case you get problems running the script in Win11 manually, you can run the command to bypass restriction, and after, another to set back to a safe or undefined policy.
 
   You can check the current policy settings:
@@ -38,5 +40,9 @@ Get-Process $RealtimeProcessesFormatted | Format-List Name, PriorityClass, BaseP
 $taskName = "SchedulingPriorities"
 $taskExists = Get-ScheduledTask | Where-Object {$_.TaskName -like $taskName }
 if (!$taskExists) {
-    $action = New-ScheduledTaskAction -Execute "powershell" -Argument "-WindowStyle hidden -ExecutionPolicy Bypass -File $PSScriptRoot\scheduling_priorities.ps1";$delay = New-TimeSpan -Seconds 10;$trigger = New-ScheduledTaskTrigger -AtLogOn -RandomDelay $delay;$principal = New-ScheduledTaskPrincipal -UserID "LOCALSERVICE" -RunLevel Highest;Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $trigger -Principal $principal;
+    $action = New-ScheduledTaskAction -Execute "powershell" -Argument "-WindowStyle hidden -ExecutionPolicy Bypass -File $PSScriptRoot\scheduling_priorities.ps1"
+    $delay = New-TimeSpan -Seconds 10
+    $trigger = New-ScheduledTaskTrigger -AtLogOn -RandomDelay $delay
+    $principal = New-ScheduledTaskPrincipal -UserID "LOCALSERVICE" -RunLevel Highest
+    Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $trigger -Principal $principal
 }

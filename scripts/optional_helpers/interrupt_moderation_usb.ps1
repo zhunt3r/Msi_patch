@@ -16,6 +16,18 @@
 
 	-------------------------
 
+	Changes made into memory will reset after a simple reboot in the system.
+
+	I created a way to persist the change. You can set this script to be run in every startup automatically.
+
+	Startup script is optional at first, because before that, you must test the script if will work and not cause any BSOD, by not having the startup set, a simple restart should be enough to have it normalized.
+
+	Know that once you have uncommented the startup function call, you must keep the file and folder including everything in the same location that you executed this script file from.
+
+	Go to the bottom of the file and uncoment Apply-Startup-Script, meaning remove the # from before it and run the script again. That should do it.
+
+	-------------------------
+
 	In case you get problems running the script in Win11, you can run the command to allow, and after, another to set back to a safer or undefined policy
 
 	You can check the current policy settings
@@ -280,7 +292,6 @@ function Execute-IMOD-Process {
 
 # --------------------------------------------------------------------------------------------
 
-# Startup script is optional, because before that you must test the script if will work and not cause BSOD, by not having the startup set, a simple restart should be enough to have it normalized. Know that once you have enabled the startup function, you must keep the file and folder including everything in the location that you executed this script file from.
 # Uncomment line below if you want to apply startup script
 # Apply-Startup-Script
 
