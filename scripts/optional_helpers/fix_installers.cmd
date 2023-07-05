@@ -1,4 +1,4 @@
-:: In case some installers are not working through click or winget, e.g., .msixbundle, .appinstaller, .appx, .appxbundle, some packages from winget.
+:: Run this script, in case some installers are not working through click or winget, e.g., .msixbundle, .appinstaller, .appx, .appxbundle, some packages from winget.
 
 :: WIP - Remove this line and everything below the divider, once a solution is found and built.
 
@@ -6,7 +6,7 @@
 
 :: WIP Notes
 
-:: I dont know all the things in all the tweaks+debloat that would cause this to break, If someone wants to find out, in the simplest and cleanest way and make a PR. Try to get it working with the minimum enabled.
+:: I dont know all the things in all the tweaks+debloat that would cause this to break, If someone wants to find out, in the simplest and cleanest way and make a PR. Try to get it working with the minimum needed.
 
 :: Try to build a sort of toggle in this, so each time you run the script, it will enable or disable everything that it end up going through here.
 
