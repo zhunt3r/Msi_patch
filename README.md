@@ -131,4 +131,5 @@ It doesnt mean they arent trustworthy, I don't know them, it just means it's not
   - <https://www.youtube.com/@Savitarax/videos>
   - <https://github.com/BoringBoredom/PC-Optimization-Hub>
   - <https://github.com/djdallmann/GamingPCSetup>
+  - <https://github.com/amitxv/PC-Tuning>
   - <https://docs.google.com/document/d/1c2-lUJq74wuYK1WrA_bIvgb89dUN0sj8-hO3vqmrau4/edit>
