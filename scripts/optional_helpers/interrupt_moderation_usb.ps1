@@ -221,8 +221,9 @@ function Find-Interrupters-Amount {
 }
 
 function Disable-IMOD {
-	param ([string] $address)
-	$Value = & "$RWPath\Rw.exe" /Min /NoLogo /Stdout /Command="W32 $address 0x00000000" 2>&1 | Out-String
+	param ([string] $address, [string] $value)
+	$valueData = if ([string]::IsNullOrWhiteSpace($value)) { return '0x00000000' } else { return $value }
+	$Value = & "$RWPath\Rw.exe" /Min /NoLogo /Stdout /Command="W32 $address $valueData" 2>&1 | Out-String
 	while ([string]::IsNullOrWhiteSpace($Value)) { Start-Sleep -Seconds 1 }
 }
 
@@ -269,7 +270,7 @@ function Execute-IMOD-Process {
 		}
 		if ($item.Type -eq 'EHCI') {
 			$InterruptData = Build-Interrupt-Threshold-Control-Data -memoryRange $item.MemoryRange
-			Disable-IMOD -address $InterruptData.ValueAddress
+			Disable-IMOD -address $InterruptData.InterruptAddress -value $InterruptData.ValueAddress
 			Write-Host "Disabled Interrupt Threshold Control - Interrupt Address $($InterruptData.InterruptAddress) - Value Address $($InterruptData.ValueAddress)"
 		}
 
