@@ -1,3 +1,6 @@
+pushd "%~dp0"
+pushd ..\tools
+
 for /f "delims=" %%a in ('powershell -noprofile -c "Get-CimInstance -ClassName Win32_PnPEntity | where-object {$_.PNPClass -match 'Display'} | ForEach-Object { ($_ | Invoke-CimMethod -MethodName GetDeviceProperties).deviceProperties.where({$_.KeyName -EQ 'DEVPKEY_Device_Driver'}).data }"') do set "GPU_DEVICE_CLASS_GUID_WITH_KEY=%%a"
 
 for /f "delims=" %%b in ('powershell -noprofile -c "Get-CimInstance -ClassName Win32_VideoController | Select -ExpandProperty AdapterCompatibility | %% { if ($_ -like '*Nvidia*') { return 'Nvidia' }; if ($_ -like '*Advanced Micro*') { return 'AMD' } }"') do set "GPU_TYPE=%%b"
