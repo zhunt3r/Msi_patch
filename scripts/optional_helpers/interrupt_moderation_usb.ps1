@@ -28,7 +28,7 @@
 
 	-------------------------
 
-	In case you get problems running the script in Win11, you can run the command to allow, and after, another to set back to a safer or undefined policy
+	In case you get problems running the script in Win11, you can run the command to allow, and after, another to set back to a safer or undefined policy. But if you have set to be run at every startup, you might want to keep the bypass without changing it back.
 
 	You can check the current policy settings
 	Get-ExecutionPolicy -List
