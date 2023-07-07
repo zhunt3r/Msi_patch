@@ -31,6 +31,8 @@ Make sure you create a System Restore Point before running any scripts.
 
 > I would say to install everything that you need and configure (from docs and else), before creating the next restore point, because restore point could break, at least it does in Win11, after you run debloat scripts. At least you will have that point to restore. Though I suppose services script from debloat could be why, leave it for last.
 
+> Note: To uncomment a line, you remove the # or :: from before the command. Might be useful in certain cases.
+
 > After running the scripts, follow some guides from the `docs` folder.
 
 - [GPU_GUIDE](/docs/GPU_GUIDE.md)
@@ -127,6 +129,7 @@ It doesnt mean they arent trustworthy, I don't know them, it just means it's not
   - <https://hexed.it/>
   - <https://systeminformer.sourceforge.io/> (former Process Hacker)
   - <https://github.com/thebookisclosed/ViVe>
+  - <https://github.com/vinaypamnani/wmie2>
 
 - Places that could be informative
   - <https://www.youtube.com/watch?v=6CB8P0-hJRQ>

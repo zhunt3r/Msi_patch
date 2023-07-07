@@ -11,3 +11,5 @@
 - NanaRun (MinSudo) - <https://github.com/M2Team/NanaRun/releases> - It's the alternative recommendation and from the same team as the now archived NSudo - <https://github.com/M2TeamArchived/NSudo>
 
 - RW (X64 Portable) - <http://rweverything.com/download/>
+
+- Nvidia Control Panel - It's here if someone are unable to install from the driver into their system, not an actual helper tool.

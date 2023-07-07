@@ -1,3 +1,6 @@
+:: (Optionally) you can run IMOD disable script through here
+:: powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0\..\optional_helpers\interrupt_moderation_usb.ps1"
+
 :: Forcing RAW Mouse Input and Disabling Enhance Pointer Precision
 REG ADD "HKEY_CURRENT_USER\Control Panel\Mouse" /v MouseSensitivity /t REG_SZ /d 10 /f
 REG ADD "HKEY_CURRENT_USER\Control Panel\Mouse" /v MouseSpeed /t REG_SZ /d 0 /f
