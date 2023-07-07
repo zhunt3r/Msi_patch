@@ -95,7 +95,7 @@ It doesnt mean they arent trustworthy, I don't know them, it just means it's not
 
 <https://www.youtube.com/watch?v=3UVKfliA_Rc>
 
-> How one would keep the process transparent? A way would be, let's say you are on github and you have all your code there, create a github actions CI script that does all the building based on what is in the repository, and the CI  would also be responsible for releasing into Releases page of the repository. There would be no external building by hand, all done through automation / CI.
+> How one would keep the process transparent? A way would be, let's say you are on github and you have all your code there, create a github actions CI script that does all the building based on what is in the repository, and the CI  would also be responsible for releasing into Releases page of the repository. There would be no external building by hand, all done through automation / CI. All the CI building process would be public and visible to anyone.
 
 ---
 
