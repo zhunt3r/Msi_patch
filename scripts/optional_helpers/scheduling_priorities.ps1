@@ -7,6 +7,8 @@
 
   https://learn.microsoft.com/en-us/windows/win32/procthread/scheduling-priorities
 
+	idle/low: 64, below normal: 16384, normal: 32, above normal: 32768, high: 128, realtime: 256
+
   -------------------------
 
   In case you get problems running the script in Win11 manually, you can run the command to bypass restriction, and after, another to set back to a safe or undefined policy.
@@ -26,15 +28,20 @@ Push-Location $PSScriptRoot
 
 # Must include the extension, add other executables in here.
 $RealtimeProcesses = @("csrss.exe", "wininit.exe")
+$LowProcesses = @('dwm.exe')
 
 # Set priority to every process in list
 foreach ($item in $RealtimeProcesses) {
     $Process = Get-WmiObject -Class Win32_Process -Filter "name='$item'"; $Process.SetPriority(256);
 }
 
+foreach ($item in $LowProcesses) {
+    $Process = Get-WmiObject -Class Win32_Process -Filter "name='$item'"; $Process.SetPriority(64);
+}
+
 # List changed processes priority
-$RealtimeProcessesFormatted = $RealtimeProcesses | ForEach-Object { $_.split(".")[0] }
-Get-Process $RealtimeProcessesFormatted | Format-List Name, PriorityClass, BasePriority
+$Processes = ($RealtimeProcesses + $LowProcesses) | ForEach-Object { $_.split(".")[0] }
+Get-Process $Processes | Format-List Name, PriorityClass, BasePriority
 
 # Setup this script to be re-executed in every boot
 $taskName = "SchedulingPriorities"
