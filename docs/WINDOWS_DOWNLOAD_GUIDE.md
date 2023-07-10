@@ -1,6 +1,6 @@
 # Windows Download
 
-Download the ISO through the official microsoft website 
+Download the ISO through the official microsoft website
 
 - Windows 10 - <https://www.microsoft.com/software-download/windows10ISO>
 - Windows 11 - <https://www.microsoft.com/software-download/windows11>
@@ -17,8 +17,8 @@ In that case:
 - Create your bootable OS in your USB drive
 - Done!
 
-> I recommend disconnecting Wifi/Ethernet from the internet, before you start installing, that way, you can install without requiring a microsoft account and if you do a limited install, it will skip a lot of steps. Primarily useful for Windows 11.
+> I recommend disconnecting Wifi/Ethernet from the internet, before you start installing, that way, you can install without requiring a microsoft account and if you do a limited install, it will skip a lot of steps. Primarily useful for Windows 11. This might also help. <https://gist.github.com/dougg0k/11d0241c0ddf1c88f2f2df1308d7bcf2>
 
 > After you install, activate the windows before applying tweaks [scripts/optional_helpers/activate_windows.cmd](/scripts/optional_helpers/activate_windows.cmd) Add your KEY to the right place in the file. Run as administrator.
 
-> Do all windows update before continuing with scripts. 
+> Do all windows update before continuing with scripts.

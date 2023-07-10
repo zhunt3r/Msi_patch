@@ -20,8 +20,8 @@
 - (At your own risk) You can overclock the USB mouse hz by following this tutorial <https://www.overclock.net/threads/usb-mouse-hard-overclocking-2000-hz.1589644/>
   - It should help reduce input lag / make it more responsive at some extent. <https://www.youtube.com/watch?v=x0wcJM4FtXQ> - <https://www.youtube.com/watch?v=ahsO5bhBUtk>
   - If you dont want to overclock, in some devices like controllers, you can at least reduce the input delay, by setting what will make bInterval to 1. <https://www.youtube.com/watch?v=_Sqgy95iAwE>
+- If you have a Logitech mouse, sometimes might be better to not have their software running in the background. You can download their portable solution at <https://support.logi.com/hc/en-us/articles/360059641133>
 
-### Logitech
+## Controller
 
-- If you have a Logitech mouse, sometimes might be better to not have their software running in the background.
-- You can download their portable solution at <https://support.logi.com/hc/en-us/articles/360059641133>
+- Use PS4/5 controllers in the PC - <https://ds4-windows.com/>
