@@ -50,7 +50,7 @@ Make sure you create a System Restore Point before running any scripts.
 
 ---
 
-Feel free to verify the repository, by downloading with Download ZIP and verifying at [VirusTotal](https://www.virustotal.com/)
+You can verify the repository, by downloading with `Download ZIP` and verifying at [VirusTotal](https://www.virustotal.com/).
 
 Here is an [Example](https://www.virustotal.com/gui/file/de761e6eae9de1d8b18599c1e9982c0a528c7770fc7bfe363faace7dab59698b/detection), there are red flags, though if you look at the Relations tab, you will see that they are from scripts and from the nvidiaProfileInspector.
 
