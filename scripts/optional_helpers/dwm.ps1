@@ -56,7 +56,7 @@ function Is-Win10 {
 
 function Is-OS-Version-Supported {
 	$Versions = Get-OS-Build-Version
-	return $Versions.DisplayVersion -eq $SUPPORTED_VERSION -and $Versions.BuildNumber -le $SUPPORT_WIN11_UP_TO_BUILD -and $Versions.RevNumber -le $SUPPORT_WIN11_UP_TO_REV
+	return $Versions.DisplayVersion -eq $SUPPORTED_VERSION -and $Versions.BuildNumber -le $SUPPORT_WIN11_UP_TO_BUILD -and $Versions.RevNumber -le $SUPPORT_WIN11_UP_TO_REV -and (Is-Win10 -or Is-Win11)
 }
 
 function Show-Message {
@@ -97,7 +97,7 @@ function Get-OpenShell-Install-Id {
 function Is-OpenShell-Installed {
 	if ([string]::IsNullOrWhiteSpace(Get-OpenShell-Install-Id)) { return $false } else { return $true }
 }
- 
+
 function Uninstall-OpenShell {
 	Show-Message -value "Started uninstalling OpenShell"
 	$OpenShellID = Get-OpenShell-Install-Id
@@ -110,7 +110,7 @@ function Run-Command-With-Elevated-Permission {
 	& "$PSScriptRoot\run_minsudo" "powershell -NoProfile -ExecutionPolicy Bypass -Command $value"
 }
 
-function Alter-Necessary-REGs {
+function Alter-REGs {
 	Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\TestHooks" -Name "ConsoleMode" -Value 1 -Force -Type Dword -ErrorAction Ignore
 	Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\TestHooks" -Name "XamlCredUIAvailable" -Value 0 -Force -Type Dword -ErrorAction Ignore
 	Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\DWM" -Name "CompositionPolicy" -Value 0 -Force -Type Dword -ErrorAction Ignore
@@ -123,7 +123,7 @@ function Undo-REG-Changes {
 	Remove-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\dwm.exe" -Name "Debugger" -Force -ErrorAction Ignore
 }
 
-function Disable-Necessary-Executables {
+function Disable-Executables {
 	Stop-Process -Name StartMenuExperienceHost.exe -Force -ErrorAction Ignore
 	$ShellExperienceHostPath = "%SystemRoot%\SystemApps\ShellExperienceHost_cw5n1h2txyewy\ShellExperienceHost.exe"
 	Run-Command-With-Elevated-Permission -value "Move-Item -Path $ShellExperienceHostPath -Destination "$ShellExperienceHostPath.backup" -Force"
@@ -133,7 +133,7 @@ function Disable-Necessary-Executables {
 	Run-Command-With-Elevated-Permission -value "Move-Item -Path $RuntimeBrokerPath -Destination "$RuntimeBrokerPath.backup" -Force"
 }
 
-function Enable-Necessary-Executables {
+function Enable-Executables {
 	$ShellExperienceHostPath = "%SystemRoot%\SystemApps\ShellExperienceHost_cw5n1h2txyewy\ShellExperienceHost.exe"
 	Run-Command-With-Elevated-Permission -value "Move-Item -Path "$ShellExperienceHostPath.backup" -Destination $ShellExperienceHostPath -Force"
 
@@ -141,7 +141,7 @@ function Enable-Necessary-Executables {
 	Run-Command-With-Elevated-Permission -value "Move-Item -Path "$RuntimeBrokerPath.backup" -Destination $RuntimeBrokerPath -Force"
 }
 
-function Disable-Necessary-DLLs {
+function Disable-DLLs {
 	$Path = "%SystemRoot%\System32"
 	foreach ($dll in $DLLs) {
 		$FilePath = "$Path\$dll.dll"
@@ -151,7 +151,7 @@ function Disable-Necessary-DLLs {
 	}
 }
 
-function Enable-Necessary-DLLs {
+function Enable-DLLs {
 	$Path = "%SystemRoot%\System32"
 	foreach ($dll in $DLLs) {
 		$FilePath = "$Path\$dll.dll"
@@ -161,17 +161,18 @@ function Enable-Necessary-DLLs {
 	}
 }
 
-function Disable-Necessary-Services {
+function Disable-Services {
 	# TODO
+	# Run-Command-With-Elevated-Permission -value "Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\$NAME" -Name "Start" -Value 4 -Force -Type Dword -ErrorAction Ignore"
 }
 
-function Enable-Necessary-Services {
-	# TODO
+function Enable-Services {
+	# TODO - It should contain the correct Start value
 }
 
 function Is-DWM-Enabled {
 	if (Get-Process -Name dwm -ErrorAction SilentlyContinue) { return $true } else { $false }
-} 
+}
 
 # -------------------------------------------------------------------------------------------
 
@@ -183,13 +184,13 @@ if (!Is-OS-Version-Supported) {
 if (Is-DWM-Enabled) {
 	Download-And-Install-Latest-OpenShell
 	Alter-Necessary-REGs
-	Disable-Necessary-Executables
-	Disable-Necessary-DLLs
-	Disable-Necessary-Services
+	Disable-Executables
+	Disable-DLLs
+	Disable-Services
 } else {
 	Uninstall-OpenShell
 	Undo-REG-Changes
-	Enable-Necessary-Executables
-	Enable-Necessary-DLLs
-	Enable-Necessary-Services
+	Enable-Executables
+	Enable-DLLs
+	Enable-Services
 }
