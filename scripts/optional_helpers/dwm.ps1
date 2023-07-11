@@ -6,6 +6,8 @@
 	Script goal is to keep the disabling persisted through a restart while everything still being functional.
 	Why? Because some dwm scripts are built to be disabled, and enabled before you restart/shutdown your computer, otherwise it breaks your system.
 
+	This script is made to be working within the whole gaming_os_tweaker folder, as it depends on one of it's tools. You can still run this script through cmd, powershell or UI if you prefer, as long as it is in the folder that it belongs.
+
 	-------------------------
 
 	It will only be supported in the versions that were tested, and for now, 22H2 for both Win10 and 11, but not to builds before.
