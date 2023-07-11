@@ -60,10 +60,12 @@ $Executables = @(
 	"$env:SystemRoot\System32\taskhostw.exe",
 	"$env:SystemRoot\SystemApps\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\StartMenuExperienceHost.exe",
 	"$env:SystemRoot\SystemApps\Microsoft.Windows.Search_cw5n1h2txyewy\SearchApp.exe"
+	# "$env:SystemRoot\Resources\Themes\aero\aero.msstyles"
 )
 
 $Services = @(
-	[PsObject]@{Name = 'UxSms'; DefaultValue = 2}
+	# [PsObject]@{Name = 'UxSms'; DefaultValue = 2},
+	# [PsObject]@{Name = 'Themes'; DefaultValue = 2}
 )
 
 # -----------------------------------------------------------------------------------------------------------------
