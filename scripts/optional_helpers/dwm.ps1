@@ -1,9 +1,10 @@
 <#
-	WIP (not done aka not usable)
+	WIP (not done)
 
 	Automated script to disable or enable DWM, a toggle.
 
 	Script goal is to keep the disabling persisted through a restart while everything still being functional.
+	Why? Because some dwm scripts are built to be disabled, and enabled before you restart/shutdown your computer, otherwise it breaks your system.
 
 	-------------------------
 
@@ -30,18 +31,42 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 	Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs; exit
 }
 
+# -----------------------------------------------------------------------------------------------------------------
+
 $SUPPORT_WIN11_UP_TO_BUILD = 0
 $SUPPORT_WIN11_UP_TO_REV = 0
 $SUPPORTED_VERSION = "22H2"
 
+$DLLPath = "%SystemRoot%\System32"
+
 $DLLs = @('UIRibbon', 'UIRibbonRes', 'Windows.UI.Logon', 'DWMInit', 'WSClient')
 
+$Executables = @(
+	'%SystemRoot%\SystemApps\ShellExperienceHost_cw5n1h2txyewy\ShellExperienceHost.exe',
+	'%SystemRoot%\System32\RuntimeBroker.exe'
+)
+
+$Services = @(
+	[PsObject]@{Name = 'UxSms'; DefaultValue = 2}
+)
+
+# -----------------------------------------------------------------------------------------------------------------
+
 function Get-OS-Build-Version {
-	$DisplayVersion = Get-ComputerInfo | Select-Object -ExpandProperty OSDisplayVersion
 	$Versions = [System.Environment]::OSVersion.Version
 	$RevNumber = $Versions.Revision
 	$BuildNumber = $Versions.Build
-	return @{RevNumber = $RevNumber; BuildNumber = $BuildNumber; DisplayVersion = $DisplayVersion}
+	return @{ RevNumber = $RevNumber; BuildNumber = $BuildNumber }
+}
+
+function Get-Display-Version {
+	return Get-ComputerInfo | Select-Object -ExpandProperty OSDisplayVersion
+}
+
+function Get-Filename-From-Path {
+	param ([string] $value)
+	$valueSplit = $value.Split('\')
+	return $valueSplit[$valueSplit.Length - 1]
 }
 
 function Is-Win11 {
@@ -56,7 +81,11 @@ function Is-Win10 {
 
 function Is-OS-Version-Supported {
 	$Versions = Get-OS-Build-Version
-	return $Versions.DisplayVersion -eq $SUPPORTED_VERSION -and $Versions.BuildNumber -le $SUPPORT_WIN11_UP_TO_BUILD -and $Versions.RevNumber -le $SUPPORT_WIN11_UP_TO_REV -and (Is-Win10 -or Is-Win11)
+	$DisplayVersion = Get-Display-Version
+	if (Is-Win10 -and $DisplayVersion -eq $SUPPORTED_VERSION) {
+		return $true
+	}
+	return Is-Win11 -and $DisplayVersion -eq $SUPPORTED_VERSION -and $Versions.BuildNumber -le $SUPPORT_WIN11_UP_TO_BUILD -and $Versions.RevNumber -le $SUPPORT_WIN11_UP_TO_REV
 }
 
 function Show-Message {
@@ -67,6 +96,7 @@ function Show-Message {
 
 function Download-And-Install-Latest-OpenShell {
 	if (Is-OpenShell-Installed) {
+		Show-Message -value "OpenShell is already installed, ignore and continue."
 		exit 0
 	}
 	$releasesJson = "https://api.github.com/repos/Open-Shell/Open-Shell-Menu/releases"
@@ -95,13 +125,14 @@ function Get-OpenShell-Install-Id {
 }
 
 function Is-OpenShell-Installed {
-	if ([string]::IsNullOrWhiteSpace(Get-OpenShell-Install-Id)) { return $false } else { return $true }
+	$OpenShellId = Get-OpenShell-Install-Id
+	if ([string]::IsNullOrWhiteSpace($OpenShellId)) { return $false } else { return $true }
 }
 
 function Uninstall-OpenShell {
 	Show-Message -value "Started uninstalling OpenShell"
-	$OpenShellID = Get-OpenShell-Install-Id
-	MsiExec.exe /x $OpenShellID /qn
+	$OpenShellId = Get-OpenShell-Install-Id
+	MsiExec.exe /x $OpenShellId /qn
 	Show-Message -value "Finished uninstalling OpenShell"
 }
 
@@ -124,51 +155,48 @@ function Undo-REG-Changes {
 }
 
 function Disable-Executables {
-	Stop-Process -Name StartMenuExperienceHost.exe -Force -ErrorAction Ignore
-	$ShellExperienceHostPath = "%SystemRoot%\SystemApps\ShellExperienceHost_cw5n1h2txyewy\ShellExperienceHost.exe"
-	Run-Command-With-Elevated-Permission -value "Move-Item -Path $ShellExperienceHostPath -Destination "$ShellExperienceHostPath.backup" -Force"
-
-	Stop-Process -Name RuntimeBroker.exe -Force -ErrorAction Ignore
-	$RuntimeBrokerPath = "%SystemRoot%\System32\RuntimeBroker.exe"
-	Run-Command-With-Elevated-Permission -value "Move-Item -Path $RuntimeBrokerPath -Destination "$RuntimeBrokerPath.backup" -Force"
+	foreach ($item in $Executables) {
+		$Filename = Get-Filename-From-Path -value $item
+		Stop-Process -Name $Filename -Force -ErrorAction Ignore
+		Run-Command-With-Elevated-Permission -value "Move-Item -Path $item -Destination "$item.backup" -Force -ErrorAction Ignore"
+	}
 }
 
 function Enable-Executables {
-	$ShellExperienceHostPath = "%SystemRoot%\SystemApps\ShellExperienceHost_cw5n1h2txyewy\ShellExperienceHost.exe"
-	Run-Command-With-Elevated-Permission -value "Move-Item -Path "$ShellExperienceHostPath.backup" -Destination $ShellExperienceHostPath -Force"
-
-	$RuntimeBrokerPath = "%SystemRoot%\System32\RuntimeBroker.exe"
-	Run-Command-With-Elevated-Permission -value "Move-Item -Path "$RuntimeBrokerPath.backup" -Destination $RuntimeBrokerPath -Force"
+	foreach ($item in $Executables) {
+		Run-Command-With-Elevated-Permission -value "Move-Item -Path "$item.backup" -Destination $item -Force -ErrorAction Ignore"
+	}
 }
 
 function Disable-DLLs {
-	$Path = "%SystemRoot%\System32"
 	foreach ($dll in $DLLs) {
-		$FilePath = "$Path\$dll.dll"
+		$FilePath = "$DLLPath\$dll.dll"
 		if (Test-Path -Path $FilePath -PathType Leaf) {
-			Run-Command-With-Elevated-Permission -value "Move-Item -Path $FilePath -Destination "$FilePath.backup" -Force"
+			Run-Command-With-Elevated-Permission -value "Move-Item -Path $FilePath -Destination "$FilePath.backup" -Force -ErrorAction Ignore"
 		}
 	}
 }
 
 function Enable-DLLs {
-	$Path = "%SystemRoot%\System32"
 	foreach ($dll in $DLLs) {
-		$FilePath = "$Path\$dll.dll"
+		$FilePath = "$DLLPath\$dll.dll"
 		$FilePathBackup = "$FilePath.backup"
 		if (Test-Path -Path $FilePathBackup -PathType Leaf) {
-			Run-Command-With-Elevated-Permission -value "Move-Item -Path $FilePathBackup -Destination $FilePath -Force"
+			Run-Command-With-Elevated-Permission -value "Move-Item -Path $FilePathBackup -Destination $FilePath -Force -ErrorAction Ignore"
 		}
 	}
 }
 
 function Disable-Services {
-	# TODO
-	# Run-Command-With-Elevated-Permission -value "Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\$NAME" -Name "Start" -Value 4 -Force -Type Dword -ErrorAction Ignore"
+	foreach ($item in $Services) {
+		Run-Command-With-Elevated-Permission -value "Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\$($item.Name)" -Name "Start" -Value 4 -Force -Type Dword -ErrorAction Ignore"
+	}
 }
 
 function Enable-Services {
-	# TODO - It should contain the correct Start value
+	foreach ($item in $Services) {
+		Run-Command-With-Elevated-Permission -value "Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\$($item.Name)" -Name "Start" -Value $($item.DefaultValue) -Force -Type Dword -ErrorAction Ignore"
+	}
 }
 
 function Is-DWM-Enabled {
@@ -176,12 +204,12 @@ function Is-DWM-Enabled {
 }
 
 function Restart-Machine {
-	Show-Message -value "This script will restart your machine in 10 seconds from now..."
+	Show-Message -value "Process finished, this script will restart your machine in 10 seconds from now..."
 	Start-Sleep -Seconds 10
 	Restart-Computer
 }
 
-# -------------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------------------------------------------
 
 if (!Is-OS-Version-Supported) {
 	Show-Message -value "Your OS version are not currently supported by this script!"
@@ -189,17 +217,21 @@ if (!Is-OS-Version-Supported) {
 }
 
 if (Is-DWM-Enabled) {
-	Download-And-Install-Latest-OpenShell
-	Alter-Necessary-REGs
+	Show-Message -value "Started process to disable DWM!"
+	# Download-And-Install-Latest-OpenShell # Uncomment once done
+	Alter-REGs
 	Disable-Executables
 	Disable-DLLs
 	Disable-Services
 } else {
+	Show-Message -value "Started process to enable DWM!"
 	Uninstall-OpenShell
 	Undo-REG-Changes
 	Enable-Executables
 	Enable-DLLs
 	Enable-Services
 }
+
+cmd /c pause # Remove once done
 
 # Restart-Machine # Uncomment once the script are done and working
