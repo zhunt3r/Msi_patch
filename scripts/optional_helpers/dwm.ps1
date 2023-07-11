@@ -126,7 +126,7 @@ function Download-And-Install-Latest-OpenShell {
 	Invoke-WebRequest -URI $downloadUrl -OutFile $FilePathName -UseBasicParsing
 	Show-Message -value "Installing OpenShell"
 	& "$FilePathName" /qn ADDLOCAL=StartMenu
-	Run-Command-With-Elevated-Permission -value "Remove-Item -Path $FilePathName -Force -Confirm:$false"
+	Run-Command-With-Elevated-Permission -value "Remove-Item -Path $FilePathName -Force"
 }
 
 function Get-OpenShell-Install-Id {
@@ -189,7 +189,7 @@ function Enable-Executables {
 			if ($Filename -eq 'dwm.exe') {
 				Stop-Process -Name $Filename -Force -ErrorAction Ignore
 				$RemoveTempFile = "$env:SystemRoot\System32\$Filename"
-				Run-Command-With-Elevated-Permission -value "Remove-Item -Path $RemoveTempFile -Force -Confirm:$false"
+				Run-Command-With-Elevated-Permission -value "Remove-Item -Path $RemoveTempFile -Force"
 			}
 			Run-Command-With-Elevated-Permission -value "Move-Item -Path $FilePathBackup -Destination $item -Force -ErrorAction Ignore"
 		}
@@ -232,8 +232,6 @@ function Enable-Services {
 }
 
 function Is-DWM-Enabled {
-	# $DebuggerVal = (Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\dwm.exe" -Name Debugger).Debugger
-	# if ([string]::IsNullOrWhiteSpace($DebuggerVal)) { return $false } else { return $true }
 	$DWMProcess = Get-Process -Name dwm -ErrorAction SilentlyContinue
 	if ([string]::IsNullOrWhiteSpace($DWMProcess)) { return $false } else { $true }
 }
@@ -252,14 +250,14 @@ if (!(Is-OS-Version-Supported)) {
 }
 
 if (Is-DWM-Enabled) {
-	Show-Message -value "Started process to disable DWM!"
+	Show-Message -value "Starting process to disable DWM!"
 	Download-And-Install-Latest-OpenShell
 	Alter-REGs
 	Disable-Executables
 	Disable-DLLs
 	Disable-Services
 } else {
-	Show-Message -value "Started process to enable DWM!"
+	Show-Message -value "Starting process to enable DWM!"
 	Uninstall-OpenShell
 	Undo-REG-Changes
 	Enable-Executables
