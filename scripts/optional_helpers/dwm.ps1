@@ -1,5 +1,5 @@
 <#
-	WIP (not done)
+	WIP (not done aka not usable)
 
 	Automated script to disable or enable DWM, a toggle.
 
@@ -175,6 +175,12 @@ function Is-DWM-Enabled {
 	if (Get-Process -Name dwm -ErrorAction SilentlyContinue) { return $true } else { $false }
 }
 
+function Restart-Machine {
+	Show-Message -value "This script will restart your machine in 10 seconds from now..."
+	Start-Sleep -Seconds 10
+	Restart-Computer
+}
+
 # -------------------------------------------------------------------------------------------
 
 if (!Is-OS-Version-Supported) {
@@ -195,3 +201,5 @@ if (Is-DWM-Enabled) {
 	Enable-DLLs
 	Enable-Services
 }
+
+# Restart-Machine # Uncomment once the script are done and working
