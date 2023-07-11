@@ -127,7 +127,7 @@ function Download-And-Install-Latest-OpenShell {
 	Show-Message -value "Started installing OpenShell"
 	& "$FilePathName" /qn ADDLOCAL=StartMenu
 	Show-Message -value "Finished installing OpenShell"
-	Remove-Item -Path $FilePathName -Force -Confirm
+	Run-Command-With-Elevated-Permission -value "Remove-Item -Path $FilePathName -Force -Confirm:$false"
 }
 
 function Get-OpenShell-Install-Id {
@@ -148,7 +148,7 @@ function Uninstall-OpenShell {
 
 function Run-Command-With-Elevated-Permission {
 	param ([string] $value)
-	& "$PSScriptRoot\run_minsudo" "powershell -ExecutionPolicy Bypass -Command $value"
+	& "$PSScriptRoot\run_minsudo" "powershell -ExecutionPolicy Bypass -Command $value" | Out-Null
 }
 
 function Alter-REGs {
@@ -175,7 +175,9 @@ function Disable-Executables {
 			Run-Command-With-Elevated-Permission -value "Move-Item -Path $item -Destination $item.backup -Force -ErrorAction Ignore"
 		}
 		if ($Filename -eq 'dwm.exe') {
-			Run-Command-With-Elevated-Permission -value "Copy-Item -Path "$env:SystemRoot\System32\rundll32.exe" -Destination "$env:SystemRoot\System32\dwm.exe" -Force -ErrorAction Ignore"
+			$FromFile = "$env:SystemRoot\System32\rundll32.exe"
+			$ToFile = "$env:SystemRoot\System32\dwm.exe"
+			Run-Command-With-Elevated-Permission -value "Copy-Item -Path $FromFile -Destination $ToFile -Force -ErrorAction Ignore"
 		}
 	}
 }
@@ -183,8 +185,14 @@ function Disable-Executables {
 function Enable-Executables {
 	Show-Message -value "Enabling Executables"
 	foreach ($item in $Executables) {
+		$Filename = Get-Filename-From-Path -value $item
 		$FilePathBackup = "$item.backup"
 		if (Test-Path -Path $FilePathBackup) {
+			if ($Filename -eq 'dwm.exe') {
+				Stop-Process -Name $Filename -Force -ErrorAction Ignore
+				$RemoveTempFile = "$env:SystemRoot\System32\dwm.exe"
+				Run-Command-With-Elevated-Permission -value "Remove-Item -Path $RemoveTempFile -Force -Confirm:$false"
+			}
 			Run-Command-With-Elevated-Permission -value "Move-Item -Path $FilePathBackup -Destination $item -Force -ErrorAction Ignore"
 		}
 	}
