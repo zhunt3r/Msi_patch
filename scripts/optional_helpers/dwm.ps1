@@ -155,8 +155,9 @@ function Enable-DLLs {
 	$Path = "%SystemRoot%\System32"
 	foreach ($dll in $DLLs) {
 		$FilePath = "$Path\$dll.dll"
-		if (Test-Path -Path $FilePath -PathType Leaf) {
-			Run-Command-With-Elevated-Permission -value "Move-Item -Path "$FilePath.backup" -Destination $FilePath -Force"
+		$FilePathBackup = "$FilePath.backup"
+		if (Test-Path -Path $FilePathBackup -PathType Leaf) {
+			Run-Command-With-Elevated-Permission -value "Move-Item -Path $FilePathBackup -Destination $FilePath -Force"
 		}
 	}
 }
