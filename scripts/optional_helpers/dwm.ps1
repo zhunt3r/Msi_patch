@@ -70,8 +70,8 @@ $Services = @(
 
 function Get-OS-Build-Version {
 	$Versions = [System.Environment]::OSVersion.Version
-	$RevNumber = $Versions.Revision
-	$BuildNumber = $Versions.Build
+	$RevNumber = [int]$Versions.Revision
+	$BuildNumber = [int]$Versions.Build
 	return @{ RevNumber = $RevNumber; BuildNumber = $BuildNumber }
 }
 
