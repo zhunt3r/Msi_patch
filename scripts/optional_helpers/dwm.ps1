@@ -1,6 +1,12 @@
 <#
 	WIP (not done)
 
+	Currently, it's fully working on Win10 to disable and enable.
+
+	But not on Win11, there is no taskbar, right click does not work anywhere, but openshell does work if you use windows key. An sort of small window glitch also appear and stay in the screen and if you open a folder with shortcut, the top part of it stays entirely black.
+
+	-------------------------
+
 	Automated script to disable or enable DWM, a toggle.
 
 	Script goal is to keep the disabling persisted through a restart while everything still being functional.
@@ -57,7 +63,7 @@ $Executables = @(
 )
 
 $Services = @(
-	# [PsObject]@{Name = 'UxSms'; DefaultValue = 2}
+	[PsObject]@{Name = 'UxSms'; DefaultValue = 2}
 )
 
 # -----------------------------------------------------------------------------------------------------------------
@@ -126,7 +132,6 @@ function Download-And-Install-Latest-OpenShell {
 	Invoke-WebRequest -URI $downloadUrl -OutFile $FilePathName -UseBasicParsing
 	Show-Message -value "Installing OpenShell"
 	& "$FilePathName" /qn ADDLOCAL=StartMenu
-	Run-Command-With-Elevated-Permission -value "Remove-Item -Path $FilePathName -Force"
 }
 
 function Get-OpenShell-Install-Id {
@@ -219,6 +224,9 @@ function Enable-DLLs {
 
 function Disable-Services {
 	Show-Message -value "Disabling Services"
+	if (Is-Win10) {
+		return
+	}
 	foreach ($item in $Services) {
 		Run-Command-With-Elevated-Permission -value "Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\$($item.Name)" -Name Start -Value 4 -Force -Type Dword -ErrorAction Ignore"
 	}
@@ -226,6 +234,9 @@ function Disable-Services {
 
 function Enable-Services {
 	Show-Message -value "Enabling Services"
+	if (Is-Win10) {
+		return
+	}
 	foreach ($item in $Services) {
 		Run-Command-With-Elevated-Permission -value "Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\$($item.Name)" -Name Start -Value $($item.DefaultValue) -Force -Type Dword -ErrorAction Ignore"
 	}
