@@ -45,6 +45,8 @@ $SUPPORT_WIN11_UP_TO_BUILD = 0
 $SUPPORT_WIN11_UP_TO_REV = 0
 $SUPPORTED_VERSION = "22H2"
 
+$OpenShellFilePath = "$PSScriptRoot\OpenShell-Latest.exe"
+
 $DLLPath = "$env:SystemRoot\System32"
 
 $DLLs = @('UIRibbon', 'UIRibbonRes', 'Windows.UI.Logon', 'DWMInit', 'WSClient', 'Windows.immersiveshell.serviceprovider')
@@ -129,11 +131,10 @@ function Download-And-Install-Latest-OpenShell {
 		Show-Message -value "No download url found"
 		return
 	}
-	$FilePathName = "$PSScriptRoot\OpenShell-Latest.exe"
 	Show-Message -value "Downloading OpenShell - $downloadUrl"
-	Invoke-WebRequest -URI $downloadUrl -OutFile $FilePathName -UseBasicParsing
+	Invoke-WebRequest -URI $downloadUrl -OutFile $OpenShellFilePath -UseBasicParsing
 	Show-Message -value "Installing OpenShell"
-	& "$FilePathName" /qn ADDLOCAL=StartMenu
+	& "$OpenShellFilePath" /qn ADDLOCAL=StartMenu
 }
 
 function Get-OpenShell-Install-Id {
@@ -149,6 +150,7 @@ function Uninstall-OpenShell {
 	Show-Message -value "Uninstalling OpenShell"
 	$OpenShellId = Get-OpenShell-Install-Id
 	MsiExec.exe /x $OpenShellId /qn
+	Run-Command-With-Elevated-Permission -value "Remove-Item -Path $OpenShellFilePath -Force"
 }
 
 function Run-Command-With-Elevated-Permission {
