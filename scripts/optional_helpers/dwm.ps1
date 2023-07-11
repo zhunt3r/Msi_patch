@@ -49,7 +49,7 @@ $Executables = @(
 )
 
 $Services = @(
-	[PsObject]@{Name = 'UxSms'; DefaultValue = 2}
+	# [PsObject]@{Name = 'UxSms'; DefaultValue = 2}
 )
 
 # -----------------------------------------------------------------------------------------------------------------
@@ -213,7 +213,7 @@ function Restart-Machine {
 
 # -----------------------------------------------------------------------------------------------------------------
 
-if (!Is-OS-Version-Supported) {
+if (!(Is-OS-Version-Supported)) {
 	Show-Message -value "Your OS version are not currently supported by this script!"
 	exit
 }
