@@ -122,11 +122,10 @@ function Download-And-Install-Latest-OpenShell {
 		return
 	}
 	$FilePathName = "$PSScriptRoot\OpenShell-Latest.exe"
-	Show-Message -value "Started downloading OpenShell - $downloadUrl"
+	Show-Message -value "Downloading OpenShell - $downloadUrl"
 	Invoke-WebRequest -URI $downloadUrl -OutFile $FilePathName -UseBasicParsing
-	Show-Message -value "Started installing OpenShell"
+	Show-Message -value "Installing OpenShell"
 	& "$FilePathName" /qn ADDLOCAL=StartMenu
-	Show-Message -value "Finished installing OpenShell"
 	Run-Command-With-Elevated-Permission -value "Remove-Item -Path $FilePathName -Force -Confirm:$false"
 }
 
@@ -140,10 +139,9 @@ function Is-OpenShell-Installed {
 }
 
 function Uninstall-OpenShell {
-	Show-Message -value "Started uninstalling OpenShell"
+	Show-Message -value "Uninstalling OpenShell"
 	$OpenShellId = Get-OpenShell-Install-Id
 	MsiExec.exe /x $OpenShellId /qn
-	Show-Message -value "Finished uninstalling OpenShell"
 }
 
 function Run-Command-With-Elevated-Permission {
@@ -190,7 +188,7 @@ function Enable-Executables {
 		if (Test-Path -Path $FilePathBackup) {
 			if ($Filename -eq 'dwm.exe') {
 				Stop-Process -Name $Filename -Force -ErrorAction Ignore
-				$RemoveTempFile = "$env:SystemRoot\System32\dwm.exe"
+				$RemoveTempFile = "$env:SystemRoot\System32\$Filename"
 				Run-Command-With-Elevated-Permission -value "Remove-Item -Path $RemoveTempFile -Force -Confirm:$false"
 			}
 			Run-Command-With-Elevated-Permission -value "Move-Item -Path $FilePathBackup -Destination $item -Force -ErrorAction Ignore"
@@ -234,15 +232,15 @@ function Enable-Services {
 }
 
 function Is-DWM-Enabled {
-	return $true
 	# $DebuggerVal = (Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\dwm.exe" -Name Debugger).Debugger
 	# if ([string]::IsNullOrWhiteSpace($DebuggerVal)) { return $false } else { return $true }
-	# if (Get-Process -Name dwm -ErrorAction SilentlyContinue) { return $true } else { $false }
+	$DWMProcess = Get-Process -Name dwm -ErrorAction SilentlyContinue
+	if ([string]::IsNullOrWhiteSpace($DWMProcess)) { return $false } else { $true }
 }
 
 function Restart-Machine {
-	Show-Message -value "Process finished, this script will restart your machine in 10 seconds from now..."
-	Start-Sleep -Seconds 10
+	Show-Message -value "Process finished, this script will restart your machine in 15 seconds from now..."
+	Start-Sleep -Seconds 15
 	Restart-Computer
 }
 
