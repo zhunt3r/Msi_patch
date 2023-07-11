@@ -248,7 +248,7 @@ function Enable-Services {
 
 function Is-DWM-Enabled {
 	$DWMProcess = Get-Process -Name dwm -ErrorAction SilentlyContinue
-	if ([string]::IsNullOrWhiteSpace($DWMProcess)) { return $false } else { $true }
+	if ([string]::IsNullOrWhiteSpace($DWMProcess)) { return $false } else { return $true }
 }
 
 function Restart-Machine {
