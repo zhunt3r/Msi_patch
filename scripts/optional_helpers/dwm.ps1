@@ -39,13 +39,21 @@ $SUPPORT_WIN11_UP_TO_BUILD = 0
 $SUPPORT_WIN11_UP_TO_REV = 0
 $SUPPORTED_VERSION = "22H2"
 
-$DLLPath = "%SystemRoot%\System32"
+$DLLPath = "$env:SystemRoot\System32"
 
-$DLLs = @('UIRibbon', 'UIRibbonRes', 'Windows.UI.Logon', 'DWMInit', 'WSClient')
+$DLLs = @('UIRibbon', 'UIRibbonRes', 'Windows.UI.Logon', 'DWMInit', 'WSClient', 'Windows.immersiveshell.serviceprovider')
 
 $Executables = @(
-	'%SystemRoot%\SystemApps\ShellExperienceHost_cw5n1h2txyewy\ShellExperienceHost.exe',
-	'%SystemRoot%\System32\RuntimeBroker.exe'
+	"$env:SystemRoot\SystemApps\ShellExperienceHost_cw5n1h2txyewy\ShellExperienceHost.exe",
+	"$env:SystemRoot\System32\RuntimeBroker.exe",
+	"$env:SystemRoot\System32\dwm.exe",
+	"$env:SystemRoot\SystemApps\MicrosoftWindows.Client.CBS_cw5n1h2txyewy\MiniSearchHost.exe",
+	"$env:SystemRoot\SystemApps\MicrosoftWindows.Client.CBS_cw5n1h2txyewy\SearchHost.exe",
+	"$env:SystemRoot\SystemApps\MicrosoftWindows.Client.CBS_cw5n1h2txyewy\TextInputHost.exe",
+	"$env:SystemRoot\System32\ApplicationFrameHost.exe"
+	"$env:SystemRoot\System32\taskhostw.exe",
+	"$env:SystemRoot\SystemApps\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\StartMenuExperienceHost.exe",
+	"$env:SystemRoot\SystemApps\Microsoft.Windows.Search_cw5n1h2txyewy\SearchApp.exe"
 )
 
 $Services = @(
@@ -62,7 +70,7 @@ function Get-OS-Build-Version {
 }
 
 function Get-Display-Version {
-	return Get-ComputerInfo | Select-Object -ExpandProperty OSDisplayVersion
+	return (Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion" -Name DisplayVersion).DisplayVersion
 }
 
 function Get-Filename-From-Path {
@@ -99,10 +107,10 @@ function Show-Message {
 function Download-And-Install-Latest-OpenShell {
 	if (Is-OpenShell-Installed) {
 		Show-Message -value "OpenShell is already installed, ignore and continue."
-		exit 0
+		return
 	}
 	$releasesJson = "https://api.github.com/repos/Open-Shell/Open-Shell-Menu/releases"
-	$assets = (Invoke-WebRequest $releasesJson | ConvertFrom-Json)[0].assets
+	$assets = (Invoke-WebRequest $releasesJson -UseBasicParsing | ConvertFrom-Json)[0].assets
 	$downloadUrl = ""
 	foreach ($item in $assets) {
 		if ($item.browser_download_url.Contains('.exe')) {
@@ -111,15 +119,15 @@ function Download-And-Install-Latest-OpenShell {
 	}
 	if ([string]::IsNullOrWhiteSpace($downloadUrl)) {
 		Show-Message -value "No download url found"
-		exit 0
+		return
 	}
 	$FilePathName = "$PSScriptRoot\OpenShell-Latest.exe"
 	Show-Message -value "Started downloading OpenShell - $downloadUrl"
-	Invoke-WebRequest -URI $downloadUrl -OutFile $FilePathName
+	Invoke-WebRequest -URI $downloadUrl -OutFile $FilePathName -UseBasicParsing
 	Show-Message -value "Started installing OpenShell"
 	& "$FilePathName" /qn ADDLOCAL=StartMenu
 	Show-Message -value "Finished installing OpenShell"
-	Remove-Item -Path $FilePathName -Force
+	Remove-Item -Path $FilePathName -Force -Confirm
 }
 
 function Get-OpenShell-Install-Id {
@@ -140,69 +148,88 @@ function Uninstall-OpenShell {
 
 function Run-Command-With-Elevated-Permission {
 	param ([string] $value)
-	& "$PSScriptRoot\run_minsudo" "powershell -NoProfile -ExecutionPolicy Bypass -Command $value"
+	& "$PSScriptRoot\run_minsudo" "powershell -ExecutionPolicy Bypass -Command $value"
 }
 
 function Alter-REGs {
-	Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\TestHooks" -Name "ConsoleMode" -Value 1 -Force -Type Dword -ErrorAction Ignore
-	Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\TestHooks" -Name "XamlCredUIAvailable" -Value 0 -Force -Type Dword -ErrorAction Ignore
-	Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\DWM" -Name "CompositionPolicy" -Value 0 -Force -Type Dword -ErrorAction Ignore
-	Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\dwm.exe" -Name "Debugger" -Value "%SystemRoot%\System32\rundll32.exe" -Force -Type String -ErrorAction Ignore
+	Show-Message -value "Altering REGs"
+	Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\TestHooks" -Name ConsoleMode -Value 1 -Force -Type Dword -ErrorAction Ignore
+	Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\TestHooks" -Name XamlCredUIAvailable -Value 0 -Force -Type Dword -ErrorAction Ignore
+	Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\DWM" -Name CompositionPolicy -Value 0 -Force -Type Dword -ErrorAction Ignore
+	Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\dwm.exe" -Name Debugger -Value "$env:SystemRoot\System32\rundll32.exe" -Force -Type String -ErrorAction Ignore
 }
 
 function Undo-REG-Changes {
-	Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\TestHooks" -Name "XamlCredUIAvailable" -Value 1 -Force -Type Dword -ErrorAction Ignore
-	Remove-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\TestHooks" -Name "ConsoleMode" -Force -ErrorAction Ignore
-	Remove-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\dwm.exe" -Name "Debugger" -Force -ErrorAction Ignore
+	Show-Message -value "Undoing REG Changes"
+	Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\TestHooks" -Name XamlCredUIAvailable -Value 1 -Force -Type Dword -ErrorAction Ignore
+	Remove-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\TestHooks" -Name ConsoleMode -Force -ErrorAction Ignore
+	Remove-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\dwm.exe" -Name Debugger -Force -ErrorAction Ignore
 }
 
 function Disable-Executables {
+	Show-Message -value "Disabling Executables"
 	foreach ($item in $Executables) {
 		$Filename = Get-Filename-From-Path -value $item
 		Stop-Process -Name $Filename -Force -ErrorAction Ignore
-		Run-Command-With-Elevated-Permission -value "Move-Item -Path $item -Destination "$item.backup" -Force -ErrorAction Ignore"
+		if (Test-Path -Path $item) {
+			Run-Command-With-Elevated-Permission -value "Move-Item -Path $item -Destination $item.backup -Force -ErrorAction Ignore"
+		}
+		if ($Filename -eq 'dwm.exe') {
+			Run-Command-With-Elevated-Permission -value "Copy-Item -Path "$env:SystemRoot\System32\rundll32.exe" -Destination "$env:SystemRoot\System32\dwm.exe" -Force -ErrorAction Ignore"
+		}
 	}
 }
 
 function Enable-Executables {
+	Show-Message -value "Enabling Executables"
 	foreach ($item in $Executables) {
-		Run-Command-With-Elevated-Permission -value "Move-Item -Path "$item.backup" -Destination $item -Force -ErrorAction Ignore"
+		$FilePathBackup = "$item.backup"
+		if (Test-Path -Path $FilePathBackup) {
+			Run-Command-With-Elevated-Permission -value "Move-Item -Path $FilePathBackup -Destination $item -Force -ErrorAction Ignore"
+		}
 	}
 }
 
 function Disable-DLLs {
+	Show-Message -value "Disabling DLLs"
 	foreach ($dll in $DLLs) {
 		$FilePath = "$DLLPath\$dll.dll"
-		if (Test-Path -Path $FilePath -PathType Leaf) {
-			Run-Command-With-Elevated-Permission -value "Move-Item -Path $FilePath -Destination "$FilePath.backup" -Force -ErrorAction Ignore"
+		if (Test-Path -Path $FilePath) {
+			Run-Command-With-Elevated-Permission -value "Move-Item -Path $FilePath -Destination $FilePath.backup -Force -ErrorAction Ignore"
 		}
 	}
 }
 
 function Enable-DLLs {
+	Show-Message -value "Enabling DLLs"
 	foreach ($dll in $DLLs) {
 		$FilePath = "$DLLPath\$dll.dll"
 		$FilePathBackup = "$FilePath.backup"
-		if (Test-Path -Path $FilePathBackup -PathType Leaf) {
+		if (Test-Path -Path $FilePathBackup) {
 			Run-Command-With-Elevated-Permission -value "Move-Item -Path $FilePathBackup -Destination $FilePath -Force -ErrorAction Ignore"
 		}
 	}
 }
 
 function Disable-Services {
+	Show-Message -value "Disabling Services"
 	foreach ($item in $Services) {
-		Run-Command-With-Elevated-Permission -value "Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\$($item.Name)" -Name "Start" -Value 4 -Force -Type Dword -ErrorAction Ignore"
+		Run-Command-With-Elevated-Permission -value "Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\$($item.Name)" -Name Start -Value 4 -Force -Type Dword -ErrorAction Ignore"
 	}
 }
 
 function Enable-Services {
+	Show-Message -value "Enabling Services"
 	foreach ($item in $Services) {
-		Run-Command-With-Elevated-Permission -value "Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\$($item.Name)" -Name "Start" -Value $($item.DefaultValue) -Force -Type Dword -ErrorAction Ignore"
+		Run-Command-With-Elevated-Permission -value "Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\$($item.Name)" -Name Start -Value $($item.DefaultValue) -Force -Type Dword -ErrorAction Ignore"
 	}
 }
 
 function Is-DWM-Enabled {
-	if (Get-Process -Name dwm -ErrorAction SilentlyContinue) { return $true } else { $false }
+	return $true
+	# $DebuggerVal = (Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\dwm.exe" -Name Debugger).Debugger
+	# if ([string]::IsNullOrWhiteSpace($DebuggerVal)) { return $false } else { return $true }
+	# if (Get-Process -Name dwm -ErrorAction SilentlyContinue) { return $true } else { $false }
 }
 
 function Restart-Machine {
@@ -220,7 +247,7 @@ if (!(Is-OS-Version-Supported)) {
 
 if (Is-DWM-Enabled) {
 	Show-Message -value "Started process to disable DWM!"
-	# Download-And-Install-Latest-OpenShell # Uncomment once done
+	Download-And-Install-Latest-OpenShell
 	Alter-REGs
 	Disable-Executables
 	Disable-DLLs
@@ -234,6 +261,4 @@ if (Is-DWM-Enabled) {
 	Enable-Services
 }
 
-cmd /c pause # Remove once done
-
-# Restart-Machine # Uncomment once the script are done and working
+Restart-Machine
