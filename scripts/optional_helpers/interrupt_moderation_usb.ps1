@@ -8,6 +8,8 @@
 	https://www.overclock.net/threads/usb-polling-precision.1550666/page-61#post-28580928
 	https://github.com/djdallmann/GamingPCSetup/issues/12
 	https://www.overclock.net/threads/usb-polling-precision.1550666/page-61#post-28582024
+	http://rweverything.com/
+	https://github.com/Faintsnow/HE
 
 	Note1: RW command will not run if you have the GUI version open.
 	Note2: You should be able to run this script through cmd, powershell or UI, as long as you have downloaded the gaming_os_tweaks folder and are keeping the file in the folder that it belongs.
