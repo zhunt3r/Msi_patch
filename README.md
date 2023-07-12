@@ -31,7 +31,7 @@ Make sure you create a System Restore Point before running any scripts.
 
 > I would say to install everything that you need and configure (from docs and else), before creating the next restore point, because restore point could break, at least it does in Win11, after you run debloat scripts. At least you will have that point to restore. Though I suppose services script from debloat could be why, leave it for last.
 
-> To uncomment a line, you remove the # or :: from before the command. Might be useful in certain cases.
+> To uncomment a line, you remove the `#` or `::` from before the command. Might be useful in certain cases.
 
 > Not all scripts are dependent on some tool, but some are, you should consider downloading the whole `gaming_os_tweaker` folder to use any script. Easiest way is to click on the button `<> Code` and `Download ZIP`.
 
