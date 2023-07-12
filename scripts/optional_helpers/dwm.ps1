@@ -42,7 +42,7 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 # -----------------------------------------------------------------------------------------------------------------
 
 $SUPPORT_WIN11_UP_TO_BUILD = 22621
-$SUPPORT_WIN11_UP_TO_REV = 0
+$SUPPORT_WIN11_UP_TO_PATCH = 1992
 $SUPPORTED_VERSION = "22H2"
 
 $OpenShellFilePath = "$PSScriptRoot\OpenShell-Latest.exe"
@@ -80,14 +80,12 @@ $Services = @(
 # -----------------------------------------------------------------------------------------------------------------
 
 function Get-OS-Build-Version {
-	$Versions = [System.Environment]::OSVersion.Version
-	$RevNumber = [int]$Versions.Revision
-	$BuildNumber = [int]$Versions.Build
-	return @{ RevNumber = $RevNumber; BuildNumber = $BuildNumber }
-}
-
-function Get-Display-Version {
-	return (Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion" -Name DisplayVersion).DisplayVersion
+	$Versions = Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion"
+	$BuildNumber = [int]$Versions.CurrentBuildNumber
+	$PatchNumber = [int]$Versions.UBR
+	$DisplayVersion = [string]$Versions.DisplayVersion
+	$ProductName = [string]$Versions.ProductName
+	return @{ PatchNumber = $PatchNumber; BuildNumber = $BuildNumber; DisplayVersion = $DisplayVersion; ProductName = $ProductName }
 }
 
 function Get-Filename-From-Path {
@@ -113,14 +111,13 @@ function Is-Win7 {
 
 function Is-OS-Version-Supported {
 	$Versions = Get-OS-Build-Version
-	$DisplayVersion = Get-Display-Version
 	if ((Is-Win7 -is $true)) {
 		return $false
 	}
-	if ((Is-Win10 -is $true) -and ($DisplayVersion -eq $SUPPORTED_VERSION)) {
+	if ((Is-Win10 -is $true) -and ($Versions.DisplayVersion -eq $SUPPORTED_VERSION)) {
 		return $true
 	}
-	if ((Is-Win11 -is $true) -and ($DisplayVersion -eq $SUPPORTED_VERSION) -and ($Versions.BuildNumber -le $SUPPORT_WIN11_UP_TO_BUILD) -and ($Versions.RevNumber -le $SUPPORT_WIN11_UP_TO_REV)) {
+	if ((Is-Win11 -is $true) -and ($Versions.DisplayVersion -eq $SUPPORTED_VERSION) -and ($Versions.BuildNumber -le $SUPPORT_WIN11_UP_TO_BUILD) -and ($Versions.PatchNumber -le $SUPPORT_WIN11_UP_TO_PATCH)) {
 		return $true
 	}
 	return $false
@@ -269,6 +266,11 @@ function Is-DWM-Enabled {
 	if ([string]::IsNullOrWhiteSpace($DWMProcess)) { return $false } else { return $true }
 }
 
+function Show-OS-Info {
+	$Versions = Get-OS-Build-Version
+	Show-Message -value "You are on $($Versions.ProductName) $($Versions.DisplayVersion) - Build $($Versions.BuildNumber) - Patch $($Versions.PatchNumber)"
+}
+
 function Restart-Machine {
 	Show-Message -value "Process finished, this script will restart your machine in 15 seconds from now..."
 	Start-Sleep -Seconds 15
@@ -276,6 +278,8 @@ function Restart-Machine {
 }
 
 # -----------------------------------------------------------------------------------------------------------------
+
+Show-OS-Info
 
 if (!(Is-OS-Version-Supported)) {
 	Show-Message -value "Your OS version are not currently supported by this script!"
