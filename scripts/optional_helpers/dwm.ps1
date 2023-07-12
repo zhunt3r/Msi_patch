@@ -99,9 +99,17 @@ function Is-Win10 {
 	return $Versions.BuildNumber -gt 10000 -and $Versions.BuildNumber -lt 22000
 }
 
+function Is-Win7 {
+	$Versions = Get-OS-Build-Version
+	return $Versions.BuildNumber -ge 7600 -and $Versions.BuildNumber -lt 9200
+}
+
 function Is-OS-Version-Supported {
 	$Versions = Get-OS-Build-Version
 	$DisplayVersion = Get-Display-Version
+	if (Is-Win7) {
+		return $false
+	}
 	if (Is-Win10 -and $DisplayVersion -eq $SUPPORTED_VERSION) {
 		return $true
 	}
