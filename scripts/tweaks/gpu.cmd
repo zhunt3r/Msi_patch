@@ -1,6 +1,3 @@
-pushd "%~dp0"
-pushd ..\tools
-
 for /f "delims=" %%a in ('powershell -noprofile -c "Get-CimInstance -ClassName Win32_PnPEntity | where-object {$_.PNPClass -match 'Display'} | ForEach-Object { ($_ | Invoke-CimMethod -MethodName GetDeviceProperties).deviceProperties.where({$_.KeyName -EQ 'DEVPKEY_Device_Driver'}).data }"') do set "GPU_DEVICE_CLASS_GUID_WITH_KEY=%%a"
 
 for /f "delims=" %%b in ('powershell -noprofile -c "Get-CimInstance -ClassName Win32_VideoController | Select -ExpandProperty AdapterCompatibility | %% { if ($_ -like '*Nvidia*') { return 'Nvidia' }; if ($_ -like '*Advanced Micro*') { return 'AMD' } }"') do set "GPU_TYPE=%%b"
@@ -400,11 +397,11 @@ REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Class\%GPU_DEVICE_C
 :: Set Dithering on Nvidia
 :: 10-bit Temporal
 :: for /f "delims=" %%d in ('powershell -noprofile -c "Get-ChildItem -Path 'HKLM:\SYSTEM\CurrentControlSet\Services\nvlddmkm\State\DisplayDatabase' | Select-Object -ExpandProperty Name | %% { $pathSplit = $_.Split('\'); $displayName = $pathSplit[$pathSplit.Length - 1]; $displayNameSplit = $displayName.Split('_'); if ($displayNameSplit.Length -eq 4) { return $displayName } }"') do (
-::	call ..\optional_helpers\run_minsudo "REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\nvlddmkm\State\DisplayDatabase\%%d" /v DitherRegistryKey /t REG_BINARY /d db0100001000000001010204f4000000 /f"
+::	call %~dp0\..\optional_helpers\run_minsudo "REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\nvlddmkm\State\DisplayDatabase\%%d" /v DitherRegistryKey /t REG_BINARY /d db0100001000000001010204f4000000 /f"
 :: )
 :: 8-bit Temporal
 :: for /f "delims=" %%d in ('powershell -noprofile -c "Get-ChildItem -Path 'HKLM:\SYSTEM\CurrentControlSet\Services\nvlddmkm\State\DisplayDatabase' | Select-Object -ExpandProperty Name | %% { $pathSplit = $_.Split('\'); $displayName = $pathSplit[$pathSplit.Length - 1]; $displayNameSplit = $displayName.Split('_'); if ($displayNameSplit.Length -eq 4) { return $displayName } }"') do (
-::	call ..\optional_helpers\run_minsudo "REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\nvlddmkm\State\DisplayDatabase\%%d" /v DitherRegistryKey /t REG_BINARY /d db0100001000000001010104f3000000 /f"
+::	call %~dp0\..\optional_helpers\run_minsudo "REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\nvlddmkm\State\DisplayDatabase\%%d" /v DitherRegistryKey /t REG_BINARY /d db0100001000000001010104f3000000 /f"
 :: )
 
 :: Set No Scaling in Nvidia Control Panel

@@ -1,3 +1,1 @@
-pushd "%~dp0"
-pushd ..\tools
-.\DeviceCleanupCmd -s *
+%~dp0\..\tools\DeviceCleanupCmd -s *
