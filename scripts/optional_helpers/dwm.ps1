@@ -3,7 +3,7 @@
 
 	Currently, it's fully working on Win10 to disable and enable.
 
-	But not on Win11, there is no taskbar, right click does not work anywhere, but openshell does work if you use windows key. An sort of small window glitch also appear and stay in the screen and if you open a folder with shortcut, the top part of it stays entirely black.
+	But not on Win11, there is no taskbar, right click does not work anywhere, but openshell does work if you use windows key. An sort of small window glitch also appear and stay in the screen and if you open a folder with shortcut, the top part of it stays entirely black. Folders you can open, some apps you can open, not others, but it will be still broken.
 
 	-------------------------
 
@@ -41,7 +41,7 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 
 # -----------------------------------------------------------------------------------------------------------------
 
-$SUPPORT_WIN11_UP_TO_BUILD = 0
+$SUPPORT_WIN11_UP_TO_BUILD = 22621
 $SUPPORT_WIN11_UP_TO_REV = 0
 $SUPPORTED_VERSION = "22H2"
 
@@ -49,7 +49,14 @@ $OpenShellFilePath = "$PSScriptRoot\OpenShell-Latest.exe"
 
 $DLLPath = "$env:SystemRoot\System32"
 
-$DLLs = @('UIRibbon', 'UIRibbonRes', 'Windows.UI.Logon', 'DWMInit', 'WSClient', 'Windows.immersiveshell.serviceprovider')
+$DLLs = @(
+	'UIRibbon',
+	'UIRibbonRes',
+	'Windows.UI.Logon',
+	'DWMInit',
+	'WSClient',
+	'Windows.immersiveshell.serviceprovider'
+)
 
 $Executables = @(
 	"$env:SystemRoot\SystemApps\ShellExperienceHost_cw5n1h2txyewy\ShellExperienceHost.exe",
@@ -58,7 +65,7 @@ $Executables = @(
 	"$env:SystemRoot\SystemApps\MicrosoftWindows.Client.CBS_cw5n1h2txyewy\MiniSearchHost.exe",
 	"$env:SystemRoot\SystemApps\MicrosoftWindows.Client.CBS_cw5n1h2txyewy\SearchHost.exe",
 	"$env:SystemRoot\SystemApps\MicrosoftWindows.Client.CBS_cw5n1h2txyewy\TextInputHost.exe",
-	"$env:SystemRoot\System32\ApplicationFrameHost.exe"
+	"$env:SystemRoot\System32\ApplicationFrameHost.exe",
 	"$env:SystemRoot\System32\taskhostw.exe",
 	"$env:SystemRoot\SystemApps\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\StartMenuExperienceHost.exe",
 	"$env:SystemRoot\SystemApps\Microsoft.Windows.Search_cw5n1h2txyewy\SearchApp.exe"
@@ -107,13 +114,16 @@ function Is-Win7 {
 function Is-OS-Version-Supported {
 	$Versions = Get-OS-Build-Version
 	$DisplayVersion = Get-Display-Version
-	if (Is-Win7) {
+	if ((Is-Win7 -is $true)) {
 		return $false
 	}
-	if (Is-Win10 -and $DisplayVersion -eq $SUPPORTED_VERSION) {
+	if ((Is-Win10 -is $true) -and ($DisplayVersion -eq $SUPPORTED_VERSION)) {
 		return $true
 	}
-	return Is-Win11 -and $DisplayVersion -eq $SUPPORTED_VERSION -and $Versions.BuildNumber -le $SUPPORT_WIN11_UP_TO_BUILD -and $Versions.RevNumber -le $SUPPORT_WIN11_UP_TO_REV
+	if ((Is-Win11 -is $true) -and ($DisplayVersion -eq $SUPPORTED_VERSION) -and ($Versions.BuildNumber -le $SUPPORT_WIN11_UP_TO_BUILD) -and ($Versions.RevNumber -le $SUPPORT_WIN11_UP_TO_REV)) {
+		return $true
+	}
+	return $false
 }
 
 function Show-Message {
@@ -240,7 +250,7 @@ function Disable-Services {
 		return
 	}
 	foreach ($item in $Services) {
-		Run-Command-With-Elevated-Permission -value "Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\$($item.Name)" -Name Start -Value 4 -Force -Type Dword -ErrorAction Ignore"
+		Run-Command-With-Elevated-Permission -value "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\services\$($item.Name)' -Name Start -Value 4 -Force -Type Dword -ErrorAction Ignore"
 	}
 }
 
@@ -250,7 +260,7 @@ function Enable-Services {
 		return
 	}
 	foreach ($item in $Services) {
-		Run-Command-With-Elevated-Permission -value "Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\$($item.Name)" -Name Start -Value $($item.DefaultValue) -Force -Type Dword -ErrorAction Ignore"
+		Run-Command-With-Elevated-Permission -value "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\services\$($item.Name)' -Name Start -Value $($item.DefaultValue) -Force -Type Dword -ErrorAction Ignore"
 	}
 }
 
