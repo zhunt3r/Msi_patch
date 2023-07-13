@@ -5,6 +5,8 @@
 
 	But not on Win11, there is no taskbar, right click does not work anywhere, but openshell does work if you use windows key. An sort of small window glitch also appear and stay in the screen and if you open a folder with shortcut, the top part of it stays entirely black. Folders you can open, some apps you can open, not others, but it will be still broken.
 
+	Anyone that want to try find the Win11 solution can do with this script, all you would have to do is add or remove data that comes after the run as administrator check below. Everything else should be automated.
+
 	-------------------------
 
 	Automated script to disable or enable DWM, a toggle.
