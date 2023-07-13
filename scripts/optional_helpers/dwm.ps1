@@ -69,7 +69,7 @@ $Executables = @(
 	"$env:SystemRoot\System32\taskhostw.exe",
 	"$env:SystemRoot\SystemApps\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\StartMenuExperienceHost.exe",
 	"$env:SystemRoot\SystemApps\Microsoft.Windows.Search_cw5n1h2txyewy\SearchApp.exe"
-	"$env:SystemRoot\System32\sihost.exe",
+	# "$env:SystemRoot\System32\sihost.exe"
 	# "$env:SystemRoot\Resources\Themes\aero\aero.msstyles"
 )
 
