@@ -69,6 +69,7 @@ $Executables = @(
 	"$env:SystemRoot\System32\taskhostw.exe",
 	"$env:SystemRoot\SystemApps\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\StartMenuExperienceHost.exe",
 	"$env:SystemRoot\SystemApps\Microsoft.Windows.Search_cw5n1h2txyewy\SearchApp.exe"
+	"$env:SystemRoot\System32\sihost.exe",
 	# "$env:SystemRoot\Resources\Themes\aero\aero.msstyles"
 )
 
@@ -211,6 +212,7 @@ function Enable-Executables {
 		$FilePathBackup = "$item.backup"
 		if (Test-Path -Path $FilePathBackup) {
 			if ($Filename -eq 'dwm.exe') {
+				Stop-Process -Name 'winlogon.exe' -Force -ErrorAction Ignore
 				Stop-Process -Name $Filename -Force -ErrorAction Ignore
 				$RemoveTempFile = "$env:SystemRoot\System32\$Filename"
 				Run-Command-With-Elevated-Permission -value "Remove-Item -Path $RemoveTempFile -Force"
@@ -272,7 +274,7 @@ function Show-OS-Info {
 }
 
 function Restart-Machine {
-	Show-Message -value "Process finished, this script will restart your machine in 15 seconds from now..."
+	Show-Message -value "Process finished, this script will restart your PC in 15 seconds from now..."
 	Start-Sleep -Seconds 15
 	Restart-Computer
 }
