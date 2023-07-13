@@ -1,4 +1,1 @@
-pushd "%~dp0"
-pushd ..\tools
-
-.\MinSudo --NoLogo --System --TrustedInstaller --Privileged cmd /c %1
+%~dp0\..\tools\MinSudo --NoLogo --System --TrustedInstaller --Privileged cmd /c %1
