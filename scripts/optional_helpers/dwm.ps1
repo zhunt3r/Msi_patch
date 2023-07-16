@@ -7,6 +7,10 @@
 
 	Anyone that want to try find the Win11 solution can do with this script, all you would have to do is add or remove data that comes after the run as administrator check below. Everything else should be automated.
 
+	I added a way to specify what file to be used in what OS, as to be able to easily use one, many or none in a OS.
+	Still Win7 are not allowed because it's not been tested, and Win11 not figured out yet, anyone that might want to contribute with a working solution, can test and enable for that OS.
+	I suppose even build/path range could be supported at some point.
+
 	-------------------------
 
 	Automated script to disable or enable DWM, a toggle.
@@ -52,32 +56,32 @@ $OpenShellFilePath = "$PSScriptRoot\OpenShell-Latest.exe"
 $DLLPath = "$env:SystemRoot\System32"
 
 $DLLs = @(
-	'UIRibbon',
-	'UIRibbonRes',
-	'Windows.UI.Logon',
-	'DWMInit',
-	'WSClient',
-	'Windows.immersiveshell.serviceprovider'
+	[PsObject]@{Name = 'UIRibbon'; inWin7 = $false; inWin10 = $true; inWin11 = $false},
+	[PsObject]@{Name = 'UIRibbonRes'; inWin7 = $false; inWin10 = $true; inWin11 = $false},
+	[PsObject]@{Name = 'Windows.UI.Logon'; inWin7 = $false; inWin10 = $true; inWin11 = $false},
+	[PsObject]@{Name = 'DWMInit'; inWin7 = $false; inWin10 = $true; inWin11 = $false},
+	[PsObject]@{Name = 'WSClient'; inWin7 = $false; inWin10 = $true; inWin11 = $false},
+	[PsObject]@{Name = 'Windows.immersiveshell.serviceprovider'; inWin7 = $false; inWin10 = $true; inWin11 = $false}
 )
 
 $Executables = @(
-	"$env:SystemRoot\SystemApps\ShellExperienceHost_cw5n1h2txyewy\ShellExperienceHost.exe",
-	"$env:SystemRoot\System32\RuntimeBroker.exe",
-	"$env:SystemRoot\System32\dwm.exe",
-	"$env:SystemRoot\SystemApps\MicrosoftWindows.Client.CBS_cw5n1h2txyewy\MiniSearchHost.exe",
-	"$env:SystemRoot\SystemApps\MicrosoftWindows.Client.CBS_cw5n1h2txyewy\SearchHost.exe",
-	"$env:SystemRoot\SystemApps\MicrosoftWindows.Client.CBS_cw5n1h2txyewy\TextInputHost.exe",
-	"$env:SystemRoot\System32\ApplicationFrameHost.exe",
-	"$env:SystemRoot\System32\taskhostw.exe",
-	"$env:SystemRoot\SystemApps\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\StartMenuExperienceHost.exe",
-	"$env:SystemRoot\SystemApps\Microsoft.Windows.Search_cw5n1h2txyewy\SearchApp.exe"
-	# "$env:SystemRoot\System32\sihost.exe"
-	# "$env:SystemRoot\Resources\Themes\aero\aero.msstyles"
+	[PsObject]@{Path = "$env:SystemRoot\SystemApps\ShellExperienceHost_cw5n1h2txyewy\ShellExperienceHost.exe"; inWin7 = $false; inWin10 = $true; inWin11 = $false},
+	[PsObject]@{Path = "$env:SystemRoot\System32\RuntimeBroker.exe"; inWin7 = $false; inWin10 = $true; inWin11 = $false},
+	[PsObject]@{Path = "$env:SystemRoot\System32\dwm.exe"; inWin7 = $false; inWin10 = $true; inWin11 = $false},
+	[PsObject]@{Path = "$env:SystemRoot\SystemApps\MicrosoftWindows.Client.CBS_cw5n1h2txyewy\MiniSearchHost.exe"; inWin7 = $false; inWin10 = $true; inWin11 = $false},
+	[PsObject]@{Path = "$env:SystemRoot\SystemApps\MicrosoftWindows.Client.CBS_cw5n1h2txyewy\SearchHost.exe"; inWin7 = $false; inWin10 = $true; inWin11 = $false},
+	[PsObject]@{Path = "$env:SystemRoot\SystemApps\MicrosoftWindows.Client.CBS_cw5n1h2txyewy\TextInputHost.exe"; inWin7 = $false; inWin10 = $true; inWin11 = $false},
+	[PsObject]@{Path = "$env:SystemRoot\System32\ApplicationFrameHost.exe"; inWin7 = $false; inWin10 = $true; inWin11 = $false},
+	[PsObject]@{Path = "$env:SystemRoot\System32\taskhostw.exe"; inWin7 = $false; inWin10 = $true; inWin11 = $false},
+	[PsObject]@{Path = "$env:SystemRoot\SystemApps\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\StartMenuExperienceHost.exe"; inWin7 = $false; inWin10 = $true; inWin11 = $false},
+	[PsObject]@{Path = "$env:SystemRoot\SystemApps\Microsoft.Windows.Search_cw5n1h2txyewy\SearchApp.exe"; inWin7 = $false; inWin10 = $true; inWin11 = $false},
+	[PsObject]@{Path = "$env:SystemRoot\System32\sihost.exe"; inWin7 = $false; inWin10 = $false; inWin11 = $false},
+	[PsObject]@{Path = "$env:SystemRoot\Resources\Themes\aero\aero.msstyles"; inWin7 = $false; inWin10 = $false; inWin11 = $false},
 )
 
 $Services = @(
-	# [PsObject]@{Name = 'UxSms'; DefaultValue = 2},
-	# [PsObject]@{Name = 'Themes'; DefaultValue = 2}
+	# [PsObject]@{Name = 'UxSms'; DefaultValue = 2; inWin7 = $false; inWin10 = $false; inWin11 = $false},
+	# [PsObject]@{Name = 'Themes'; DefaultValue = 2; inWin7 = $false; inWin10 = $false; inWin11 = $false}
 )
 
 # -----------------------------------------------------------------------------------------------------------------
@@ -191,13 +195,35 @@ function Undo-REG-Changes {
 	Remove-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\dwm.exe" -Name Debugger -Force -ErrorAction Ignore
 }
 
+function Is-Value-Used-In-OS {
+	param ([PSObject] $value)
+	$isWin7 = Is-Win7
+	$isWin10 = Is-Win10
+	$isWin11 = Is-Win11
+	if ($value.inWin7 -and $isWin7) {
+		return $true
+	}
+	if ($value.inWin10 -and $isWin10) {
+		return $true
+	}
+	if ($value.inWin11 -and $isWin11) {
+		return $true
+	}
+	return $false
+}
+
 function Disable-Executables {
 	Show-Message -value "Disabling Executables"
 	foreach ($item in $Executables) {
-		$Filename = Get-Filename-From-Path -value $item
+		$isValueUsed = Is-Value-Used-In-OS -value $item
+		if (!$isValueUsed) {
+			continue
+		}
+		$Path = $item.Path
+		$Filename = Get-Filename-From-Path -value $Path
 		Stop-Process -Name $Filename -Force -ErrorAction Ignore
-		if (Test-Path -Path $item) {
-			Run-Command-With-Elevated-Permission -value "Move-Item -Path $item -Destination $item.backup -Force -ErrorAction Ignore"
+		if (Test-Path -Path $Path) {
+			Run-Command-With-Elevated-Permission -value "Move-Item -Path $Path -Destination $Path.backup -Force -ErrorAction Ignore"
 		}
 		if ($Filename -eq 'dwm.exe') {
 			$FromFile = "$env:SystemRoot\System32\rundll32.exe"
@@ -210,8 +236,13 @@ function Disable-Executables {
 function Enable-Executables {
 	Show-Message -value "Enabling Executables"
 	foreach ($item in $Executables) {
-		$Filename = Get-Filename-From-Path -value $item
-		$FilePathBackup = "$item.backup"
+		$isValueUsed = Is-Value-Used-In-OS -value $item
+		if (!$isValueUsed) {
+			continue
+		}
+		$Path = $item.Path
+		$Filename = Get-Filename-From-Path -value $Path
+		$FilePathBackup = "$Path.backup"
 		if (Test-Path -Path $FilePathBackup) {
 			if ($Filename -eq 'dwm.exe') {
 				Stop-Process -Name 'winlogon.exe' -Force -ErrorAction Ignore
@@ -226,8 +257,13 @@ function Enable-Executables {
 
 function Disable-DLLs {
 	Show-Message -value "Disabling DLLs"
-	foreach ($dll in $DLLs) {
-		$FilePath = "$DLLPath\$dll.dll"
+	foreach ($item in $DLLs) {
+		$isValueUsed = Is-Value-Used-In-OS -value $item
+		if (!$isValueUsed) {
+			continue
+		}
+		$DLL = $item.Name
+		$FilePath = "$DLLPath\$DLL.dll"
 		if (Test-Path -Path $FilePath) {
 			Run-Command-With-Elevated-Permission -value "Move-Item -Path $FilePath -Destination $FilePath.backup -Force -ErrorAction Ignore"
 		}
@@ -236,8 +272,13 @@ function Disable-DLLs {
 
 function Enable-DLLs {
 	Show-Message -value "Enabling DLLs"
-	foreach ($dll in $DLLs) {
-		$FilePath = "$DLLPath\$dll.dll"
+	foreach ($item in $DLLs) {
+		$isValueUsed = Is-Value-Used-In-OS -value $item
+		if (!$isValueUsed) {
+			continue
+		}
+		$DLL = $item.Name
+		$FilePath = "$DLLPath\$DLL.dll"
 		$FilePathBackup = "$FilePath.backup"
 		if (Test-Path -Path $FilePathBackup) {
 			Run-Command-With-Elevated-Permission -value "Move-Item -Path $FilePathBackup -Destination $FilePath -Force -ErrorAction Ignore"
@@ -247,21 +288,25 @@ function Enable-DLLs {
 
 function Disable-Services {
 	Show-Message -value "Disabling Services"
-	if (Is-Win10) {
-		return
-	}
 	foreach ($item in $Services) {
-		Run-Command-With-Elevated-Permission -value "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\services\$($item.Name)' -Name Start -Value 4 -Force -Type Dword -ErrorAction Ignore"
+		$isValueUsed = Is-Value-Used-In-OS -value $item
+		if (!$isValueUsed) {
+			continue
+		}
+		$Service = $item.Name
+		Run-Command-With-Elevated-Permission -value "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\services\$Service' -Name Start -Value 4 -Force -Type Dword -ErrorAction Ignore"
 	}
 }
 
 function Enable-Services {
 	Show-Message -value "Enabling Services"
-	if (Is-Win10) {
-		return
-	}
 	foreach ($item in $Services) {
-		Run-Command-With-Elevated-Permission -value "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\services\$($item.Name)' -Name Start -Value $($item.DefaultValue) -Force -Type Dword -ErrorAction Ignore"
+		$isValueUsed = Is-Value-Used-In-OS -value $item
+		if (!$isValueUsed) {
+			continue
+		}
+		$Service = $item.Name
+		Run-Command-With-Elevated-Permission -value "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\services\$Service' -Name Start -Value $($item.DefaultValue) -Force -Type Dword -ErrorAction Ignore"
 	}
 }
 
