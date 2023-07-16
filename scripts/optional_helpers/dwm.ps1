@@ -45,7 +45,7 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 $OpenShellFilePath = "$PSScriptRoot\OpenShell-Latest.exe"
 $DLLPath = "$env:SystemRoot\System32"
 
-# Follow this pattern to add rules "Win7-Win10:20H1-Build.Patch-Build.Patch;Win7:19H1-Build.Patch-Build.Patch;Win10:21H2-Build.Patch-Build.Patch", alternatively you can add -All if that windows edition (e.g., 22H2) are supported from the first to the last build and patch. Beware, there are 4 different possible separators (- : ; .)
+# Follow this pattern to add rules (OSs-:Edition-FromBuild.FromPatch-ToBuild.ToPatch) e.g., "Win7-Win10:20H1-Build.Patch-Build.Patch;Win7:19H1-Build.Patch-Build.Patch;Win10:21H2-Build.Patch-Build.Patch", alternatively you can add -All if that windows edition (e.g., 22H2) are supported from the first to the last build and patch. Beware, there are 4 different possible separators (- : ; .)
 
 $DLLs = @(
 	[PsObject]@{Name = 'UIRibbon'; Rules = 'Win10:22H2-All'},
