@@ -84,7 +84,7 @@ function Get-OS-Build-Version {
 	$BuildNumber = [int]$Versions.CurrentBuildNumber
 	$PatchNumber = [int]$Versions.UBR
 	$DisplayVersion = [string]$Versions.DisplayVersion
-	$ProductName = [string]$Versions.ProductName
+	$ProductName = Get-WmiObject -Class Win32_OperatingSystem | Select-Object -ExpandProperty Caption
 	return @{ PatchNumber = $PatchNumber; BuildNumber = $BuildNumber; DisplayVersion = $DisplayVersion; ProductName = $ProductName }
 }
 
@@ -109,7 +109,16 @@ function Is-OS-Version-Supported {
 
 function Get-OS-Number {
 	param ([string] $value)
-	return $value.Split(' ')[1] -as [int]
+	$ValueSplit = $value.Split(' ')
+	$OSNumber = $null
+	foreach ($item in $ValueSplit) {
+		$itemAsInt = $item -as [int32]
+		if ($itemAsInt.GetType() -eq 'Int32') {
+			$OSNumber = $itemAsInt
+			break
+		}
+	}
+	return $OSNumber
 }
 
 function Get-Rules-Data {
