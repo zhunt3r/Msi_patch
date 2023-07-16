@@ -43,10 +43,9 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 # -----------------------------------------------------------------------------------------------------------------
 
 $OpenShellFilePath = "$PSScriptRoot\OpenShell-Latest.exe"
-
 $DLLPath = "$env:SystemRoot\System32"
 
-# Follow this pattern to add rules "Win7-Win10:20H1-Build.Patch-Build.Patch;Win7:19H1-Build.Patch-Build.Patch;Win10:21H2-Build.Patch-Build.Patch", alternatively you can add -All if that windows display version (like 22H2) are supported from the first to the last build and patch. Beware, there are 4 different possible separators (- : ; .)
+# Follow this pattern to add rules "Win7-Win10:20H1-Build.Patch-Build.Patch;Win7:19H1-Build.Patch-Build.Patch;Win10:21H2-Build.Patch-Build.Patch", alternatively you can add -All if that windows edition (e.g., 22H2) are supported from the first to the last build and patch. Beware, there are 4 different possible separators (- : ; .)
 
 $DLLs = @(
 	[PsObject]@{Name = 'UIRibbon'; Rules = 'Win10:22H2-All'},
@@ -110,10 +109,10 @@ function Is-OS-Version-Supported {
 function Get-OS-Number {
 	param ([string] $value)
 	$ValueSplit = $value.Split(' ')
-	$OSNumber = $null
+	$OSNumber = 0
 	foreach ($item in $ValueSplit) {
-		$itemAsInt = $item -as [int32]
-		if ($itemAsInt.GetType() -eq 'Int32') {
+		$itemAsInt = $item -as [int]
+		if (![string]::IsNullOrWhiteSpace($itemAsInt) -and $itemAsInt.GetType().Name -eq 'Int32') {
 			$OSNumber = $itemAsInt
 			break
 		}
@@ -161,6 +160,7 @@ function Is-Value-Used-In-OS {
 	param ([string] $value)
 	$SupportCount = 0
 	$Rules = Get-Rules-Data -value $value
+	$CurrentVersions = Get-OS-Build-Version
 	$CurrentOSNumber = Get-OS-Number -value $CurrentVersions.ProductName
 	foreach ($rule in $Rules) {
 		if (
