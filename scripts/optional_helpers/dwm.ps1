@@ -1,17 +1,13 @@
 <#
 	WIP (not done)
 
-	Currently, it's fully working on Win10 to disable and enable.
+	Currently, it's fully working on Win10 22H2 to disable and enable.
 
 	But not on Win11, there is no taskbar, right click does not work anywhere, but openshell does work if you use windows key. An sort of small window glitch also appear and stay in the screen and if you open a folder with shortcut, the top part of it stays entirely black. Folders you can open, some apps you can open, not others, but it will be still broken.
 
-	Anyone that want to try find the Win11 solution can do with this script, all you would have to do is add or remove data that comes after the run as administrator check below. Everything else should be automated.
+	Anyone that want to try find the Win11 solution can do with this script, all you would have to do is add / remove rules and/or items. Everything else should be automated.
 
-	I added a way to specify what file to be used in what OS, as to be able to easily use one, many or none in a OS.
-	Still Win7 are not allowed because it's not been tested, and Win11 not figured out yet, anyone that might want to contribute with a working solution, can test and enable for that OS.
-
-	I suppose even build/path range could be supported at some point. Like "Win7-Win10:20H1-Build.Patch-Build.Patch;Win7:19H1-Build.Patch-Build.Patch;Win10:21H2-Build.Patch-Build.Patch" in a single variable. Beware that it might ignore your system after this, instead of check and warn before hand. (OSs:DisplayNumber-From-To). That would replace the current inWin variable. Into one.
-	But ugly and prone to error, still it should be only a few items in the arrays.
+	I add a new way to support different OS and builds, a Rule variable, pattern is below in how it works. Anyone are able to test and contribute in different builds. Beware, if DWM are not disabled in any of the builds, it might need additional checks at Is-DWM-Enabled
 
 	-------------------------
 
@@ -24,12 +20,9 @@
 
 	-------------------------
 
-	It will only be supported in the versions that were tested, and for now, 22H2 for both Win10 and 11, but not to builds before.
-	There are additional checks, only up to a build that were tested and confirmed working. To prevent incompability with untested builds/versions.
+	It will only be supported in the versions that were tested. All checks will be based on the Rules, to prevent incompatibility with untested builds/versions.
 
-	You are responsible for any damage it may cause, there will be checks and testing, but we never know if there is an unknown variable in your system could cause other problems.
-
-	You are free to remove the checks and test yourself in different builds, but again it's your responsability for any damage it may cause. I wont be providing any support other than possibly fixing general confirmed bugs.
+	You are responsible for any damage it may cause, there will be checks and testing, but we never know if there is an unknown variable in your system could cause other problems. I wont be providing any support other than possibly fixing general confirmed bugs.
 
 	-------------------------
 
@@ -49,41 +42,39 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 
 # -----------------------------------------------------------------------------------------------------------------
 
-$SUPPORT_WIN11_UP_TO_BUILD = 22621
-$SUPPORT_WIN11_UP_TO_PATCH = 1992
-$SUPPORTED_VERSION = "22H2"
-
 $OpenShellFilePath = "$PSScriptRoot\OpenShell-Latest.exe"
 
 $DLLPath = "$env:SystemRoot\System32"
 
+# Follow this pattern to add rules "Win7-Win10:20H1-Build.Patch-Build.Patch;Win7:19H1-Build.Patch-Build.Patch;Win10:21H2-Build.Patch-Build.Patch", alternatively you can add -All if that windows display version (like 22H2) are supported from the first to the last build and patch. Beware, there are 4 different possible separators (- : ; .)
+
 $DLLs = @(
-	[PsObject]@{Name = 'UIRibbon'; inWin7 = $false; inWin10 = $true; inWin11 = $false},
-	[PsObject]@{Name = 'UIRibbonRes'; inWin7 = $false; inWin10 = $true; inWin11 = $false},
-	[PsObject]@{Name = 'Windows.UI.Logon'; inWin7 = $false; inWin10 = $true; inWin11 = $false},
-	[PsObject]@{Name = 'DWMInit'; inWin7 = $false; inWin10 = $true; inWin11 = $false},
-	[PsObject]@{Name = 'WSClient'; inWin7 = $false; inWin10 = $true; inWin11 = $false},
-	[PsObject]@{Name = 'Windows.immersiveshell.serviceprovider'; inWin7 = $false; inWin10 = $true; inWin11 = $false}
+	[PsObject]@{Name = 'UIRibbon'; Rules = 'Win10:22H2-All'},
+	[PsObject]@{Name = 'UIRibbonRes'; Rules = 'Win10:22H2-All'},
+	[PsObject]@{Name = 'Windows.UI.Logon'; Rules = 'Win10:22H2-All'},
+	[PsObject]@{Name = 'DWMInit'; Rules = 'Win10:22H2-All'},
+	[PsObject]@{Name = 'WSClient'; Rules = 'Win10:22H2-All'},
+	[PsObject]@{Name = 'Windows.immersiveshell.serviceprovider'; Rules = 'Win10:22H2-All'}
 )
 
 $Executables = @(
-	[PsObject]@{Path = "$env:SystemRoot\SystemApps\ShellExperienceHost_cw5n1h2txyewy\ShellExperienceHost.exe"; inWin7 = $false; inWin10 = $true; inWin11 = $false},
-	[PsObject]@{Path = "$env:SystemRoot\System32\RuntimeBroker.exe"; inWin7 = $false; inWin10 = $true; inWin11 = $false},
-	[PsObject]@{Path = "$env:SystemRoot\System32\dwm.exe"; inWin7 = $false; inWin10 = $true; inWin11 = $false},
-	[PsObject]@{Path = "$env:SystemRoot\SystemApps\MicrosoftWindows.Client.CBS_cw5n1h2txyewy\MiniSearchHost.exe"; inWin7 = $false; inWin10 = $true; inWin11 = $false},
-	[PsObject]@{Path = "$env:SystemRoot\SystemApps\MicrosoftWindows.Client.CBS_cw5n1h2txyewy\SearchHost.exe"; inWin7 = $false; inWin10 = $true; inWin11 = $false},
-	[PsObject]@{Path = "$env:SystemRoot\SystemApps\MicrosoftWindows.Client.CBS_cw5n1h2txyewy\TextInputHost.exe"; inWin7 = $false; inWin10 = $true; inWin11 = $false},
-	[PsObject]@{Path = "$env:SystemRoot\System32\ApplicationFrameHost.exe"; inWin7 = $false; inWin10 = $true; inWin11 = $false},
-	[PsObject]@{Path = "$env:SystemRoot\System32\taskhostw.exe"; inWin7 = $false; inWin10 = $true; inWin11 = $false},
-	[PsObject]@{Path = "$env:SystemRoot\SystemApps\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\StartMenuExperienceHost.exe"; inWin7 = $false; inWin10 = $true; inWin11 = $false},
-	[PsObject]@{Path = "$env:SystemRoot\SystemApps\Microsoft.Windows.Search_cw5n1h2txyewy\SearchApp.exe"; inWin7 = $false; inWin10 = $true; inWin11 = $false},
-	[PsObject]@{Path = "$env:SystemRoot\System32\sihost.exe"; inWin7 = $false; inWin10 = $false; inWin11 = $false},
-	[PsObject]@{Path = "$env:SystemRoot\Resources\Themes\aero\aero.msstyles"; inWin7 = $false; inWin10 = $false; inWin11 = $false},
+	[PsObject]@{Path = "$env:SystemRoot\SystemApps\ShellExperienceHost_cw5n1h2txyewy\ShellExperienceHost.exe"; Rules = 'Win10:22H2-All'},
+	[PsObject]@{Path = "$env:SystemRoot\System32\RuntimeBroker.exe"; Rules = 'Win10:22H2-All'},
+	[PsObject]@{Path = "$env:SystemRoot\System32\dwm.exe"; Rules = 'Win10:22H2-All'},
+	[PsObject]@{Path = "$env:SystemRoot\SystemApps\MicrosoftWindows.Client.CBS_cw5n1h2txyewy\MiniSearchHost.exe"; Rules = 'Win10:22H2-All'},
+	[PsObject]@{Path = "$env:SystemRoot\SystemApps\MicrosoftWindows.Client.CBS_cw5n1h2txyewy\SearchHost.exe"; Rules = 'Win10:22H2-All'},
+	[PsObject]@{Path = "$env:SystemRoot\SystemApps\MicrosoftWindows.Client.CBS_cw5n1h2txyewy\TextInputHost.exe"; Rules = 'Win10:22H2-All'},
+	[PsObject]@{Path = "$env:SystemRoot\System32\ApplicationFrameHost.exe"; Rules = 'Win10:22H2-All'},
+	[PsObject]@{Path = "$env:SystemRoot\System32\taskhostw.exe"; Rules = 'Win10:22H2-All'},
+	[PsObject]@{Path = "$env:SystemRoot\SystemApps\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\StartMenuExperienceHost.exe"; Rules = 'Win10:22H2-All'},
+	[PsObject]@{Path = "$env:SystemRoot\SystemApps\Microsoft.Windows.Search_cw5n1h2txyewy\SearchApp.exe"; Rules = 'Win10:22H2-All'},
+	[PsObject]@{Path = "$env:SystemRoot\System32\sihost.exe"; Rules = ''},
+	[PsObject]@{Path = "$env:SystemRoot\Resources\Themes\aero\aero.msstyles"; Rules = ''}
 )
 
 $Services = @(
-	# [PsObject]@{Name = 'UxSms'; DefaultValue = 2; inWin7 = $false; inWin10 = $false; inWin11 = $false},
-	# [PsObject]@{Name = 'Themes'; DefaultValue = 2; inWin7 = $false; inWin10 = $false; inWin11 = $false}
+	[PsObject]@{Name = 'UxSms'; DefaultValue = 2; Rules = ''},
+	[PsObject]@{Name = 'Themes'; DefaultValue = 2; Rules = ''}
 )
 
 # -----------------------------------------------------------------------------------------------------------------
@@ -103,33 +94,78 @@ function Get-Filename-From-Path {
 	return $valueSplit[$valueSplit.Length - 1]
 }
 
-function Is-Win11 {
-	$Versions = Get-OS-Build-Version
-	return $Versions.BuildNumber -ge 22000
-}
-
-function Is-Win10 {
-	$Versions = Get-OS-Build-Version
-	return $Versions.BuildNumber -gt 10000 -and $Versions.BuildNumber -lt 22000
-}
-
-function Is-Win7 {
-	$Versions = Get-OS-Build-Version
-	return $Versions.BuildNumber -ge 7600 -and $Versions.BuildNumber -lt 9200
-}
-
 function Is-OS-Version-Supported {
 	$Versions = Get-OS-Build-Version
-	if ((Is-Win7 -is $true)) {
-		return $false
+	$CombinedData = $DLLs + $Executables + $Services
+	$ItemsSupportedCount = 0
+	foreach ($item in $CombinedData) {
+		$IsValueUsed = Is-Value-Used-In-OS -value $item.Rules
+		if ($IsValueUsed) {
+			$ItemsSupportedCount++
+		}
 	}
-	if ((Is-Win10 -is $true) -and ($Versions.DisplayVersion -eq $SUPPORTED_VERSION)) {
-		return $true
+	return $ItemsSupportedCount -gt 0
+}
+
+function Get-OS-Number {
+	param ([string] $value)
+	return $value.Split(' ')[1] -as [int]
+}
+
+function Get-Rules-Data {
+	param ([string] $value)
+	$RulesData = @()
+	if (!$value) {
+		return $RulesData
 	}
-	if ((Is-Win11 -is $true) -and ($Versions.DisplayVersion -eq $SUPPORTED_VERSION) -and ($Versions.BuildNumber -le $SUPPORT_WIN11_UP_TO_BUILD) -and ($Versions.PatchNumber -le $SUPPORT_WIN11_UP_TO_PATCH)) {
-		return $true
+	if ($value.Trim().Length -eq 0) {
+		return $RulesData
 	}
-	return $false
+	$Rules = $value.Split(';')
+	foreach ($rule in $Rules) {
+		$OSs = $rule.Split(':')[0]
+		$OSsSplit = $OSs.Split('-')
+		$OSsBuild = $rule.Split(':')[1]
+		$BuildVersions = $OSsBuild.Split('-')
+		$DisplayVersion = $BuildVersions[0]
+		$FromBuild = 0
+		$FromPatch = 0
+		$ToBuild = 0
+		$ToPatch = 0
+		if ($BuildVersions.Length -gt 2 -and $BuildVersions[1] -ne 'All') {
+			$FromVer = $BuildVersions[1].Split('.')
+			$FromBuild = $FromVer[0]
+			$FromPatch = $FromVer[1]
+			$ToVer = $BuildVersions[2].Split('.')
+			$ToBuild = $ToVer[0]
+			$ToPatch = $ToVer[1]
+		}
+		foreach ($OS in $OSsSplit) {
+			$OSNumber = [int]$OS.replace('Win', '')
+			$RulesData += [PsObject]@{OS = $OSNumber; DisplayVersion = $DisplayVersion; FromBuild = $FromBuild; FromPatch = $FromPatch; ToBuild = $ToBuild; ToPatch = $ToPatch}
+		}
+	}
+	return $RulesData
+}
+
+function Is-Value-Used-In-OS {
+	param ([string] $value)
+	$SupportCount = 0
+	$Rules = Get-Rules-Data -value $value
+	$CurrentOSNumber = Get-OS-Number -value $CurrentVersions.ProductName
+	foreach ($rule in $Rules) {
+		if (
+			$rule.OS -eq $CurrentOSNumber -and
+			$rule.DisplayVersion -eq $CurrentVersions.DisplayVersion -and
+			$CurrentVersions.BuildNumber -ge $rule.FromBuild -and
+			$CurrentVersions.BuildNumber -le $rule.ToBuild -and
+			$CurrentVersions.PatchNumber -ge $rule.FromPatch -and
+			$CurrentVersions.PatchNumber -le $rule.ToPatch
+		) {
+			$SupportCount++
+		}
+	}
+	return $SupportCount -gt 0
 }
 
 function Show-Message {
@@ -197,27 +233,10 @@ function Undo-REG-Changes {
 	Remove-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\dwm.exe" -Name Debugger -Force -ErrorAction Ignore
 }
 
-function Is-Value-Used-In-OS {
-	param ([PSObject] $value)
-	$isWin7 = Is-Win7
-	$isWin10 = Is-Win10
-	$isWin11 = Is-Win11
-	if ($value.inWin7 -and $isWin7) {
-		return $true
-	}
-	if ($value.inWin10 -and $isWin10) {
-		return $true
-	}
-	if ($value.inWin11 -and $isWin11) {
-		return $true
-	}
-	return $false
-}
-
 function Disable-Executables {
 	Show-Message -value "Disabling Executables"
 	foreach ($item in $Executables) {
-		$isValueUsed = Is-Value-Used-In-OS -value $item
+		$isValueUsed = Is-Value-Used-In-OS -value $item.Rules
 		if (!$isValueUsed) {
 			continue
 		}
@@ -238,7 +257,7 @@ function Disable-Executables {
 function Enable-Executables {
 	Show-Message -value "Enabling Executables"
 	foreach ($item in $Executables) {
-		$isValueUsed = Is-Value-Used-In-OS -value $item
+		$isValueUsed = Is-Value-Used-In-OS -value $item.Rules
 		if (!$isValueUsed) {
 			continue
 		}
@@ -260,7 +279,7 @@ function Enable-Executables {
 function Disable-DLLs {
 	Show-Message -value "Disabling DLLs"
 	foreach ($item in $DLLs) {
-		$isValueUsed = Is-Value-Used-In-OS -value $item
+		$isValueUsed = Is-Value-Used-In-OS -value $item.Rules
 		if (!$isValueUsed) {
 			continue
 		}
@@ -275,7 +294,7 @@ function Disable-DLLs {
 function Enable-DLLs {
 	Show-Message -value "Enabling DLLs"
 	foreach ($item in $DLLs) {
-		$isValueUsed = Is-Value-Used-In-OS -value $item
+		$isValueUsed = Is-Value-Used-In-OS -value $item.Rules
 		if (!$isValueUsed) {
 			continue
 		}
@@ -291,7 +310,7 @@ function Enable-DLLs {
 function Disable-Services {
 	Show-Message -value "Disabling Services"
 	foreach ($item in $Services) {
-		$isValueUsed = Is-Value-Used-In-OS -value $item
+		$isValueUsed = Is-Value-Used-In-OS -value $item.Rules
 		if (!$isValueUsed) {
 			continue
 		}
@@ -303,18 +322,13 @@ function Disable-Services {
 function Enable-Services {
 	Show-Message -value "Enabling Services"
 	foreach ($item in $Services) {
-		$isValueUsed = Is-Value-Used-In-OS -value $item
+		$isValueUsed = Is-Value-Used-In-OS -value $item.Rules
 		if (!$isValueUsed) {
 			continue
 		}
 		$Service = $item.Name
 		Run-Command-With-Elevated-Permission -value "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\services\$Service' -Name Start -Value $($item.DefaultValue) -Force -Type Dword -ErrorAction Ignore"
 	}
-}
-
-function Is-DWM-Enabled {
-	$DWMProcess = Get-Process -Name dwm -ErrorAction SilentlyContinue
-	if ([string]::IsNullOrWhiteSpace($DWMProcess)) { return $false } else { return $true }
 }
 
 function Show-OS-Info {
@@ -326,6 +340,11 @@ function Restart-Machine {
 	Show-Message -value "Process finished, this script will restart your PC in 15 seconds from now..."
 	Start-Sleep -Seconds 15
 	Restart-Computer
+}
+
+function Is-DWM-Enabled {
+	$DWMProcess = Get-Process -Name dwm -ErrorAction SilentlyContinue
+	if ([string]::IsNullOrWhiteSpace($DWMProcess)) { return $false } else { return $true }
 }
 
 # -----------------------------------------------------------------------------------------------------------------
