@@ -9,7 +9,9 @@
 
 	I added a way to specify what file to be used in what OS, as to be able to easily use one, many or none in a OS.
 	Still Win7 are not allowed because it's not been tested, and Win11 not figured out yet, anyone that might want to contribute with a working solution, can test and enable for that OS.
-	I suppose even build/path range could be supported at some point.
+
+	I suppose even build/path range could be supported at some point. Like "Win7-Win10:20H1-Build.Patch-Build.Patch;Win7:19H1-Build.Patch-Build.Patch;Win10:21H2-Build.Patch-Build.Patch" in a single variable. Beware that it might ignore your system after this, instead of check and warn before hand. (OSs:DisplayNumber-From-To). That would replace the current inWin variable. Into one.
+	But ugly and prone to error, still it should be only a few items in the arrays.
 
 	-------------------------
 
