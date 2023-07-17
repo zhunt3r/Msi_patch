@@ -51,134 +51,137 @@ REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image F
 :: IP Block
 set hostspath=%windir%\System32\drivers\etc\hosts
 
-echo 127.0.0.1 vortex.data.microsoft.com >> %hostspath%
-echo 127.0.0.1 vortex-win.data.microsoft.com >> %hostspath%
-echo 127.0.0.1 telecommand.telemetry.microsoft.com >> %hostspath%
-echo 127.0.0.1 telecommand.telemetry.microsoft.com.nsatc.net >> %hostspath%
-echo 127.0.0.1 oca.telemetry.microsoft.com >> %hostspath%
-echo 127.0.0.1 oca.telemetry.microsoft.com.nsatc.net >> %hostspath%
-echo 127.0.0.1 sqm.telemetry.microsoft.com >> %hostspath%
-echo 127.0.0.1 sqm.telemetry.microsoft.com.nsatc.net >> %hostspath%
-echo 127.0.0.1 watson.telemetry.microsoft.com >> %hostspath%
-echo 127.0.0.1 watson.telemetry.microsoft.com.nsatc.net >> %hostspath%
-echo 127.0.0.1 redir.metaservices.microsoft.com >> %hostspath%
-echo 127.0.0.1 choice.microsoft.com >> %hostspath%
-echo 127.0.0.1 choice.microsoft.com.nsatc.net >> %hostspath%
-echo 127.0.0.1 df.telemetry.microsoft.com >> %hostspath%
-echo 127.0.0.1 reports.wes.df.telemetry.microsoft.com >> %hostspath%
-echo 127.0.0.1 services.wes.df.telemetry.microsoft.com >> %hostspath%
-echo 127.0.0.1 sqm.df.telemetry.microsoft.com >> %hostspath%
-echo 127.0.0.1 telemetry.microsoft.com >> %hostspath%
-echo 127.0.0.1 watson.ppe.telemetry.microsoft.com >> %hostspath%
-echo 127.0.0.1 telemetry.appex.bing.net >> %hostspath%
-echo 127.0.0.1 telemetry.urs.microsoft.com >> %hostspath%
-echo 127.0.0.1 telemetry.appex.bing.net:443 >> %hostspath%
-echo 127.0.0.1 vortex-sandbox.data.microsoft.com >> %hostspath%
-echo 127.0.0.1 settings-sandbox.data.microsoft.com >> %hostspath%
-echo 127.0.0.1 vortex.data.microsoft.com >> %hostspath%
-echo 127.0.0.1 vortex-win.data.microsoft.com >> %hostspath%
-echo 127.0.0.1 telecommand.telemetry.microsoft.com >> %hostspath%
-echo 127.0.0.1 telecommand.telemetry.microsoft.com.nsatc.net >> %hostspath%
-echo 127.0.0.1 oca.telemetry.microsoft.com >> %hostspath%
-echo 127.0.0.1 oca.telemetry.microsoft.com.nsatc.net >> %hostspath%
-echo 127.0.0.1 sqm.telemetry.microsoft.com >> %hostspath%
-echo 127.0.0.1 sqm.telemetry.microsoft.com.nsatc.net >> %hostspath%
-echo 127.0.0.1 watson.telemetry.microsoft.com >> %hostspath%
-echo 127.0.0.1 watson.telemetry.microsoft.com.nsatc.net >> %hostspath%
-echo 127.0.0.1 redir.metaservices.microsoft.com >> %hostspath%
-echo 127.0.0.1 choice.microsoft.com >> %hostspath%
-echo 127.0.0.1 choice.microsoft.com.nsatc.net >> %hostspath%
-echo 127.0.0.1 vortex-sandbox.data.microsoft.com >> %hostspath%
-echo 127.0.0.1 settings-sandbox.data.microsoft.com >> %hostspath%
-echo 127.0.0.1 df.telemetry.microsoft.com >> %hostspath%
-echo 127.0.0.1 reports.wes.df.telemetry.microsoft.com >> %hostspath%
-echo 127.0.0.1 sqm.df.telemetry.microsoft.com >> %hostspath%
-echo 127.0.0.1 telemetry.microsoft.com >> %hostspath%
-echo 127.0.0.1 watson.microsoft.com >> %hostspath%
-echo 127.0.0.1 watson.ppe.telemetry.microsoft.com >> %hostspath%
-echo 127.0.0.1 wes.df.telemetry.microsoft.com >> %hostspath%
-echo 127.0.0.1 telemetry.appex.bing.net >> %hostspath%
-echo 127.0.0.1 telemetry.urs.microsoft.com >> %hostspath%
-echo 127.0.0.1 survey.watson.microsoft.com >> %hostspath%
-echo 127.0.0.1 watson.live.com >> %hostspath%
-echo 127.0.0.1 services.wes.df.telemetry.microsoft.com >> %hostspath%
-echo 127.0.0.1 telemetry.appex.bing.net >> %hostspath%
-echo 127.0.0.1 vortex.data.microsoft.com >> %hostspath%
-echo 127.0.0.1 vortex-win.data.microsoft.com >> %hostspath%
-echo 127.0.0.1 telecommand.telemetry.microsoft.com >> %hostspath%
-echo 127.0.0.1 telecommand.telemetry.microsoft.com.nsatc.net >> %hostspath%
-echo 127.0.0.1 oca.telemetry.microsoft.com >> %hostspath%
-echo 127.0.0.1 oca.telemetry.microsoft.com.nsatc.net >> %hostspath%
-echo 127.0.0.1 sqm.telemetry.microsoft.com >> %hostspath%
-echo 127.0.0.1 sqm.telemetry.microsoft.com.nsatc.net >> %hostspath%
-echo 127.0.0.1 watson.telemetry.microsoft.com >> %hostspath%
-echo 127.0.0.1 watson.telemetry.microsoft.com.nsatc.net >> %hostspath%
-echo 127.0.0.1 redir.metaservices.microsoft.com >> %hostspath%
-echo 127.0.0.1 choice.microsoft.com >> %hostspath%
-echo 127.0.0.1 choice.microsoft.com.nsatc.net >> %hostspath%
-echo 127.0.0.1 df.telemetry.microsoft.com >> %hostspath%
-echo 127.0.0.1 reports.wes.df.telemetry.microsoft.com >> %hostspath%
-echo 127.0.0.1 wes.df.telemetry.microsoft.com >> %hostspath%
-echo 127.0.0.1 services.wes.df.telemetry.microsoft.com >> %hostspath%
-echo 127.0.0.1 sqm.df.telemetry.microsoft.com >> %hostspath%
-echo 127.0.0.1 telemetry.microsoft.com >> %hostspath%
-echo 127.0.0.1 watson.ppe.telemetry.microsoft.com >> %hostspath%
-echo 127.0.0.1 telemetry.appex.bing.net >> %hostspath%
-echo 127.0.0.1 telemetry.urs.microsoft.com >> %hostspath%
-echo 127.0.0.1 telemetry.appex.bing.net:443 >> %hostspath%
-echo 127.0.0.1 settings-sandbox.data.microsoft.com >> %hostspath%
-echo 127.0.0.1 vortex-sandbox.data.microsoft.com >> %hostspath%
-echo 127.0.0.1 survey.watson.microsoft.com >> %hostspath%
-echo 127.0.0.1 watson.live.com >> %hostspath%
-echo 127.0.0.1 watson.microsoft.com >> %hostspath%
-echo 127.0.0.1 statsfe2.ws.microsoft.com >> %hostspath%
-echo 127.0.0.1 corpext.msitadfs.glbdns2.microsoft.com >> %hostspath%
-echo 127.0.0.1 compatexchange.cloudapp.net >> %hostspath%
-echo 127.0.0.1 cs1.wpc.v0cdn.net >> %hostspath%
-echo 127.0.0.1 a-0001.a-msedge.net >> %hostspath%
-echo 127.0.0.1 a-0002.a-msedge.net >> %hostspath%
-echo 127.0.0.1 a-0003.a-msedge.net >> %hostspath%
-echo 127.0.0.1 a-0004.a-msedge.net >> %hostspath%
-echo 127.0.0.1 a-0005.a-msedge.net >> %hostspath%
-echo 127.0.0.1 a-0006.a-msedge.net >> %hostspath%
-echo 127.0.0.1 a-0007.a-msedge.net >> %hostspath%
-echo 127.0.0.1 a-0008.a-msedge.net >> %hostspath%
-echo 127.0.0.1 a-0009.a-msedge.net >> %hostspath%
-echo 127.0.0.1 msedge.net >> %hostspath%
-echo 127.0.0.1 a-msedge.net >> %hostspath%
-echo 127.0.0.1 statsfe2.update.microsoft.com.akadns.net >> %hostspath%
-echo 127.0.0.1 sls.update.microsoft.com.akadns.net >> %hostspath%
-echo 127.0.0.1 fe2.update.microsoft.com.akadns.net >> %hostspath%
-echo 127.0.0.1 diagnostics.support.microsoft.com >> %hostspath%
-echo 127.0.0.1 corp.sts.microsoft.com >> %hostspath%
-echo 127.0.0.1 statsfe1.ws.microsoft.com >> %hostspath%
-echo 127.0.0.1 pre.footprintpredict.com >> %hostspath%
-echo 127.0.0.1 i1.services.social.microsoft.com >> %hostspath%
-echo 127.0.0.1 i1.services.social.microsoft.com.nsatc.net >> %hostspath%
-echo 127.0.0.1 feedback.windows.com >> %hostspath%
-echo 127.0.0.1 feedback.microsoft-hohm.com >> %hostspath%
-echo 127.0.0.1 feedback.search.microsoft.com >> %hostspath%
-echo 127.0.0.1 live.rads.msn.com >> %hostspath%
-echo 127.0.0.1 ads1.msn.com >> %hostspath%
-echo 127.0.0.1 static.2mdn.net >> %hostspath%
-echo 127.0.0.1 g.msn.com >> %hostspath%
-echo 127.0.0.1 a.ads2.msads.net >> %hostspath%
-echo 127.0.0.1 b.ads2.msads.net >> %hostspath%
-echo 127.0.0.1 ad.doubleclick.net >> %hostspath%
-echo 127.0.0.1 ac3.msn.com >> %hostspath%
-echo 127.0.0.1 rad.msn.com >> %hostspath%
-echo 127.0.0.1 msntest.serving-sys.com >> %hostspath%
-echo 127.0.0.1 bs.serving-sys.com1 >> %hostspath%
-echo 127.0.0.1 flex.msn.com >> %hostspath%
-echo 127.0.0.1 ec.atdmt.com >> %hostspath%
-echo 127.0.0.1 cdn.atdmt.com >> %hostspath%
-echo 127.0.0.1 db3aqu.atdmt.com >> %hostspath%
-echo 127.0.0.1 cds26.ams9.msecn.net >> %hostspath%
-echo 127.0.0.1 sO.2mdn.net >> %hostspath%
-echo 127.0.0.1 aka-cdn-ns.adtech.de >> %hostspath%
-echo 127.0.0.1 secure.flashtalking.com >> %hostspath%
-echo 127.0.0.1 adnexus.net >> %hostspath%
-echo 127.0.0.1 adnxs.com >> %hostspath%
-echo 127.0.0.1 *.rad.msn.com >> %hostspath%
-echo 127.0.0.1 *.msads.net >> %hostspath%
-echo 127.0.0.1 *.msecn.net >> %hostspath%
+for %%i in (
+	vortex.data.microsoft.com,
+	vortex-win.data.microsoft.com,
+	telecommand.telemetry.microsoft.com,
+	telecommand.telemetry.microsoft.com.nsatc.net,
+	oca.telemetry.microsoft.com,
+	oca.telemetry.microsoft.com.nsatc.net,
+	sqm.telemetry.microsoft.com,
+	sqm.telemetry.microsoft.com.nsatc.net,
+	watson.telemetry.microsoft.com,
+	watson.telemetry.microsoft.com.nsatc.net,
+	redir.metaservices.microsoft.com,
+	choice.microsoft.com,
+	choice.microsoft.com.nsatc.net,
+	df.telemetry.microsoft.com,
+	reports.wes.df.telemetry.microsoft.com,
+	services.wes.df.telemetry.microsoft.com,
+	sqm.df.telemetry.microsoft.com,
+	telemetry.microsoft.com,
+	watson.ppe.telemetry.microsoft.com,
+	telemetry.appex.bing.net,
+	telemetry.urs.microsoft.com,
+	telemetry.appex.bing.net:443,
+	vortex-sandbox.data.microsoft.com,
+	settings-sandbox.data.microsoft.com,
+	vortex.data.microsoft.com,
+	vortex-win.data.microsoft.com,
+	telecommand.telemetry.microsoft.com,
+	telecommand.telemetry.microsoft.com.nsatc.net,
+	oca.telemetry.microsoft.com,
+	oca.telemetry.microsoft.com.nsatc.net,
+	sqm.telemetry.microsoft.com,
+	sqm.telemetry.microsoft.com.nsatc.net,
+	watson.telemetry.microsoft.com,
+	watson.telemetry.microsoft.com.nsatc.net,
+	redir.metaservices.microsoft.com,
+	choice.microsoft.com,
+	choice.microsoft.com.nsatc.net,
+	vortex-sandbox.data.microsoft.com,
+	settings-sandbox.data.microsoft.com,
+	df.telemetry.microsoft.com,
+	reports.wes.df.telemetry.microsoft.com,
+	sqm.df.telemetry.microsoft.com,
+	telemetry.microsoft.com,
+	watson.microsoft.com,
+	watson.ppe.telemetry.microsoft.com,
+	wes.df.telemetry.microsoft.com,
+	telemetry.appex.bing.net,
+	telemetry.urs.microsoft.com,
+	survey.watson.microsoft.com,
+	watson.live.com,
+	services.wes.df.telemetry.microsoft.com,
+	telemetry.appex.bing.net,
+	vortex.data.microsoft.com,
+	vortex-win.data.microsoft.com,
+	telecommand.telemetry.microsoft.com,
+	telecommand.telemetry.microsoft.com.nsatc.net,
+	oca.telemetry.microsoft.com,
+	oca.telemetry.microsoft.com.nsatc.net,
+	sqm.telemetry.microsoft.com,
+	sqm.telemetry.microsoft.com.nsatc.net,
+	watson.telemetry.microsoft.com,
+	watson.telemetry.microsoft.com.nsatc.net,
+	redir.metaservices.microsoft.com,
+	choice.microsoft.com,
+	choice.microsoft.com.nsatc.net,
+	df.telemetry.microsoft.com,
+	reports.wes.df.telemetry.microsoft.com,
+	wes.df.telemetry.microsoft.com,
+	services.wes.df.telemetry.microsoft.com,
+	sqm.df.telemetry.microsoft.com,
+	telemetry.microsoft.com,
+	watson.ppe.telemetry.microsoft.com,
+	telemetry.appex.bing.net,
+	telemetry.urs.microsoft.com,
+	telemetry.appex.bing.net:443,
+	settings-sandbox.data.microsoft.com,
+	vortex-sandbox.data.microsoft.com,
+	survey.watson.microsoft.com,
+	watson.live.com,
+	watson.microsoft.com,
+	statsfe2.ws.microsoft.com,
+	corpext.msitadfs.glbdns2.microsoft.com,
+	compatexchange.cloudapp.net,
+	cs1.wpc.v0cdn.net,
+	a-0001.a-msedge.net,
+	a-0002.a-msedge.net,
+	a-0003.a-msedge.net,
+	a-0004.a-msedge.net,
+	a-0005.a-msedge.net,
+	a-0006.a-msedge.net,
+	a-0007.a-msedge.net,
+	a-0008.a-msedge.net,
+	a-0009.a-msedge.net,
+	msedge.net,
+	a-msedge.net,
+	statsfe2.update.microsoft.com.akadns.net,
+	sls.update.microsoft.com.akadns.net,
+	fe2.update.microsoft.com.akadns.net,
+	diagnostics.support.microsoft.com,
+	corp.sts.microsoft.com,
+	statsfe1.ws.microsoft.com,
+	pre.footprintpredict.com,
+	i1.services.social.microsoft.com,
+	i1.services.social.microsoft.com.nsatc.net,
+	feedback.windows.com,
+	feedback.microsoft-hohm.com,
+	feedback.search.microsoft.com,
+	live.rads.msn.com,
+	ads1.msn.com,
+	static.2mdn.net,
+	g.msn.com,
+	a.ads2.msads.net,
+	b.ads2.msads.net,
+	ad.doubleclick.net,
+	ac3.msn.com,
+	rad.msn.com,
+	msntest.serving-sys.com,
+	bs.serving-sys.com1,
+	flex.msn.com,
+	ec.atdmt.com,
+	cdn.atdmt.com,
+	db3aqu.atdmt.com,
+	cds26.ams9.msecn.net,
+	sO.2mdn.net,
+	aka-cdn-ns.adtech.de,
+	secure.flashtalking.com,
+	adnexus.net,
+	adnxs.com,
+	*.rad.msn.com,
+	*.msads.net,
+	*.msecn.net
+) do echo 127.0.0.1 %%i >> %hostspath%
+
