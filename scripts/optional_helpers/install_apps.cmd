@@ -1,9 +1,12 @@
-:: https://winget.run/
-:: https://winstall.app/
 
 :: (IMPORTANT)
 :: Know that :: are considered a comment, so the command wont run if that on the left side of it, unless you get the command by itself and run, or remove it from before the command, then you can run the file.
 :: But only do so for commands, and not the explaining text, otherwise that will break the script.
+
+:: Might need a restart after first run, and run again after.
+
+:: ----------------------------------------------------------------------------------------------------------------
+:: ----------------------------------------------------------------------------------------------------------------
 
 :: Install Winget through this or use https://github.com/microsoft/winget-cli/releases with .msixbundle file
 powershell "If(-not(Get-InstalledModule WingetTools -ErrorAction silentlycontinue)){ Install-PackageProvider -Name NuGet -MinimumVersion '2.8.5.201' -Force -Scope AllUsers; Install-Module WingetTools -Confirm:$False -Force }"
@@ -11,11 +14,28 @@ powershell "If(-not(Get-InstalledModule WingetTools -ErrorAction silentlycontinu
 :: You can update them all by running
 :: winget upgrade --all
 
-:: You can find apps options by using
+:: You can find apps by using
 :: winget search whatyouwant
+
+:: https://winget.run/
+:: https://winstall.app/
 
 :: You can make it run automatically in every windows startup by running this command once
 :: powershell -c "$action = New-ScheduledTaskAction -Execute \"powershell\" -Argument \"-WindowStyle hidden -Command winget upgrade --all\"; $trigger = New-ScheduledTaskTrigger -AtLogOn; $principal = New-ScheduledTaskPrincipal -UserID "LOCALSERVICE" -RunLevel Highest; Register-ScheduledTask -TaskName \"AutoUpdateWingetApps\" -Action $action -Trigger $trigger -Principal $principal;"
+
+:: ----------------------------------------------------------------------------------------------------------------
+:: ----------------------------------------------------------------------------------------------------------------
+
+:: Alternative option, Chocolatey.
+powershell -c "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))"
+
+:: Upgrade all
+:: choco upgrade all -y
+
+:: https://community.chocolatey.org/packages
+
+:: ----------------------------------------------------------------------------------------------------------------
+:: ----------------------------------------------------------------------------------------------------------------
 
 :: You can install Windows Store apps by using their id
 :: https://apps.microsoft.com/store/detail/netflix/9WZDNCRFJ3TJ
@@ -40,7 +60,7 @@ winget install -e --id 7zip.7zip
 
 :: Replace Notepad
 :: winget install -e --id Notepad++.Notepad++
-:: winget install -e --id VSCodium.VSCodium
+winget install -e --id VSCodium.VSCodium
 :: winget install -e --id Microsoft.VisualStudioCode
 
 :: Replace Paint
@@ -51,18 +71,18 @@ winget install -e --id 7zip.7zip
 :: winget install Calculator --accept-package-agreements
 
 :: Screenshot and more
-:: winget install -e --id ShareX.ShareX
+winget install -e --id ShareX.ShareX
 
 :: Voice + Chat
-:: winget install -e --id Discord.Discord
+winget install -e --id Discord.Discord
 
 :: Replace any other Media Player
-:: winget install -e --id clsid2.mpc-hc
-:: winget install -e --id Nevcairiel.LAVFilters
-:: winget install -e --id VideoLAN.VLC
+winget install -e --id clsid2.mpc-hc
+winget install -e --id Nevcairiel.LAVFilters
+winget install -e --id VideoLAN.VLC
 
 :: Torrent
-:: winget install -e --id qBittorrent.qBittorrent
+winget install -e --id qBittorrent.qBittorrent
 
 :: Gaming
 :: winget install -e --id Valve.Steam
@@ -70,32 +90,19 @@ winget install -e --id 7zip.7zip
 :: winget install -e --id OBSProject.OBSStudio
 
 :: Test DPC and interrupt latency
-:: winget install -e --id Resplendence.LatencyMon
-
-:: Make the system more responsive
-:: winget install -e --id BitSum.ProcessLasso
+winget install -e --id Resplendence.LatencyMon
 
 :: New Powershell
 :: winget install -e --id Microsoft.PowerShell
 
-:: ----------------------------------------------------------------------------------------------------------------
-:: ----------------------------------------------------------------------------------------------------------------
-
-:: Alternatively you can use the most popular one. Chocolatey.
-
-:: Install Chocolatey
-powershell -c "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))"
-
-:: https://community.chocolatey.org/packages
+:: Install Terminal
+winget install -e --id Microsoft.WindowsTerminal
 
 :: Replace File Explorer
 :: choco install files -y
 
 :: Test to find WHEA errors
 :: choco install occt -y
-
-:: ----------------------------------------------------------------------------------------------------------------
-:: ----------------------------------------------------------------------------------------------------------------
 
 :: One of the best tunneling tools to lower ping/use better routes for MMORPGs
 :: https://www.exitlag.com/
@@ -112,7 +119,7 @@ powershell -c "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.Ser
 :: https://www.malwarebytes.com/adwcleaner
 
 :: Replace Windows Firewall - I recommend at least simplewall as alternative, you have much more control and better visibility than Windows option, and more security.
-winget install -e --id Henry++.simplewall
+choco install simplewall -y
 :: winget install -e --id Safing.Portmaster
 :: winget install -e --id GlassWire.GlassWire
 :: winget install -e --id BiniSoft.WindowsFirewallControl
