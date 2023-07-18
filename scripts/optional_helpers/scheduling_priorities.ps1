@@ -5,7 +5,7 @@
 
   -------------------------
 
-  https://learn.microsoft.com/en-us/windows/win32/procthread/scheduling-priorities
+	https://learn.microsoft.com/en-us/windows/win32/procthread/scheduling-priorities
 
 	idle/low: 64, below normal: 16384, normal: 32, above normal: 32768, high: 128, realtime: 256
 

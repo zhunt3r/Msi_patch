@@ -102,8 +102,6 @@ REG ADD "HKEY_CURRENT_USER\Software\Classes\Local Settings\Software\Microsoft\Wi
 REG ADD "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\AppHost" /v EnableWebContentEvaluation /t REG_DWORD /d 0 /f
 REG ADD "HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\SmartScreen" /v ConfigureAppInstallControl /t REG_SZ /d "Anywhere" /f
 REG ADD "HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows Defender\SmartScreen" /v ConfigureAppInstallControlEnabled /t REG_DWORD /d 0 /f
-takeown /s %computername% /u %username% /f "%WinDir%\System32\smartscreen.exe"
-icacls "%WinDir%\System32\smartscreen.exe" /grant:r %username%:F
 taskkill /im smartscreen.exe /f
 call %~dp0\..\optional_helpers\run_minsudo "del "%WinDir%\System32\smartscreen.exe" /s /f /q"
 call %~dp0\..\optional_helpers\run_minsudo "del "%WinDir%\System32\smartscreen.dll" /s /f /q"
@@ -133,6 +131,8 @@ REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image F
 REG ADD "HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Memory Management" /v FeatureSettings /t REG_DWORD /d 1 /f
 REG ADD "HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Memory Management" /v FeatureSettingsOverride /t REG_DWORD /d 3 /f
 REG ADD "HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Memory Management" /v FeatureSettingsOverrideMask /t REG_DWORD /d 3 /f
+call %~dp0\..\optional_helpers\run_minsudo "move %WinDir%\System32\mcupdate_GenuineIntel.dll %WinDir%\System32\mcupdate_GenuineIntel.dll.backup"
+call %~dp0\..\optional_helpers\run_minsudo "move %WinDir%\System32\mcupdate_AuthenticAMD.dll %WinDir%\System32\mcupdate_AuthenticAMD.dll.backup"
 
 :: Disable additional NTFS/ReFS mitigations.
 REG ADD "HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager" /v ProtectionMode /t REG_DWORD /d 0 /f
