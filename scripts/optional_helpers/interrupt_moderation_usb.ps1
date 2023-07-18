@@ -16,17 +16,7 @@
 
 	Credits to @BoringBoredom, @amitxv and @djdallmann for helping in different ways.
 
-	-------------------------
-
-	Changes made into memory will reset after a simple reboot in the system.
-
-	I created a way to persist the change. You can set this script to be run in every startup automatically.
-
-	Startup script is optional at first, because before that, you must test the script if will work and not cause any BSOD, by not having the startup set, a simple restart should be enough to have it normalized.
-
-	Know that once you have uncommented the startup function call, you must keep the file and folder including everything in the same location that you executed this script file from.
-
-	Go to the bottom of the file and uncoment Apply-Startup-Script, meaning remove the # from before it and run the script again. That should do it.
+	Additional Note: It's recommended that if you are on Win11, to have updated at least up to 07-2023 Cumulative Update KB5028185, because it contains a mouse pooling improvement.
 
 	-------------------------
 
@@ -46,16 +36,21 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 
 $RWPath = "$(Split-Path -Path $PSScriptRoot -Parent)\tools\RW"
 
-function Apply-Startup-Script {
+function Get-Task-Info {
 	$taskName = "InterruptModerationUsb"
 	$taskExists = Get-ScheduledTask | Where-Object {$_.TaskName -like $taskName }
-	if (!$taskExists) {
+	return @{TaskExists = $taskExists; TaskName = $taskName}
+}
+
+function Apply-Startup-Script {
+	$TaskInfo = Get-Task-Info
+	if (!$TaskInfo.TaskExists) {
 		$action = New-ScheduledTaskAction -Execute "powershell" -Argument "-WindowStyle hidden -ExecutionPolicy Bypass -File $PSScriptRoot\interrupt_moderation_usb.ps1"
 		$delay = New-TimeSpan -Seconds 10
 		$trigger = New-ScheduledTaskTrigger -AtLogOn -RandomDelay $delay
 		$principal = New-ScheduledTaskPrincipal -UserID "LOCALSERVICE" -RunLevel Highest
 		$STSet = New-ScheduledTaskSettingsSet -ExecutionTimeLimit (New-TimeSpan -Minutes 3)
-		Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $trigger -Principal $principal -Settings $STSet
+		Register-ScheduledTask -TaskName $($TaskInfo.TaskName) -Action $action -Trigger $trigger -Principal $principal -Settings $STSet
 		[Environment]::NewLine
 
 		# In case you have to remove the script from startup, but are not able to do from the UI, run:
@@ -63,18 +58,37 @@ function Apply-Startup-Script {
 	}
 }
 
+function Startup-Ask {
+	$TaskInfo = Get-Task-Info
+	if ($TaskInfo.TaskExists) {
+		Write-Host "You already set this script up to be run automatically at every startup."
+		[Environment]::NewLine
+		return
+	}
+	$startup = Read-Host "Do you wish set this script to be automatically run at every windows start-up? [Y] or [N]"
+	[Environment]::NewLine
+	if ($startup -eq "Y") {
+		Write-Host "Setting up this script to be run at every windows startup automatically. Be sure to keep this file where you executed it from, otherwise there will be nothing to run."
+		[Environment]::NewLine
+		Apply-Startup-Script
+	}
+}
+
 function Apply-Tool-Compatibility-Registries {
 	$BuildNumber = Get-WMIObject Win32_OperatingSystem | Select -ExpandProperty BuildNumber
 	$isWin11 = $BuildNumber -ge 22000
+
 	if ($isWin11) {
-		Write-Host "If you are running this script the first time, you might need to do a reboot, so the tool compatibility reg changes are applied. If not the first time, ignore this message. PS: What the changes do is disable certain security features that block the tool. Use at you own risk."
 		[Environment]::NewLine
-        
-        Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" -Name "Enabled" -Value 0 -Force -Type Dword -ErrorAction Ignore
-		Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios" -Name "HypervisorEnforcedCodeIntegrity" -Value 0 -Force -Type Dword -ErrorAction Ignore
-		Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard" -Name "EnableVirtualizationBasedSecurity" -Value 0 -Force -Type Dword -ErrorAction Ignore
-		Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\SystemGuard" -Name "Enabled" -Value 0 -Force -Type Dword -ErrorAction Ignore
-		Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\CI\Config" -Name "VulnerableDriverBlocklistEnable" -Value 0 -Force -Type Dword -ErrorAction Ignore
+		Write-Host "If you are running this script the first time, you might need to do a reboot, so the tool compatibility reg changes are applied. If not the first time, ignore this message."
+		Write-Host "What the changes do? They disable certain security features that block the tool. Use at you own risk."
+		[Environment]::NewLine
+
+    Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" -Name Enabled -Value 0 -Force -Type Dword -ErrorAction Ignore
+		Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios" -Name HypervisorEnforcedCodeIntegrity -Value 0 -Force -Type Dword -ErrorAction Ignore
+		Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard" -Name EnableVirtualizationBasedSecurity -Value 0 -Force -Type Dword -ErrorAction Ignore
+		Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\SystemGuard" -Name Enabled -Value 0 -Force -Type Dword -ErrorAction Ignore
+		Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\CI\Config" -Name VulnerableDriverBlocklistEnable -Value 0 -Force -Type Dword -ErrorAction Ignore
 	}
 }
 
@@ -298,9 +312,6 @@ function Execute-IMOD-Process {
 
 # --------------------------------------------------------------------------------------------
 
-# Uncomment line below if you want to apply startup script
-# Apply-Startup-Script
-
 Apply-Tool-Compatibility-Registries
 
 Clean-Up
@@ -308,5 +319,7 @@ Clean-Up
 Execute-IMOD-Process
 
 Clean-Up
+
+Startup-Ask
 
 cmd /c pause
