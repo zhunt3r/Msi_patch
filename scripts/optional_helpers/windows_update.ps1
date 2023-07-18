@@ -1,10 +1,9 @@
+
+# WIP (not done)
+
+# -----------------------------------------------------------------------------
+
 # Windows Update through powershell
-
-# Depending on the kind of tweaks+debloat you have done, this may or may not work.
-# If you have done them all, from all these folders, at least the cumulatives updates will probably fail.
-
-# I dont know all the things in all the tweaks+debloat that would cause this to break, I know you can remove/disable windows update and this would still work.
-# If someone want to figure out in the simplest and cleanest way and make a PR.
 
 if (!(Get-Module -Name PSWindowsUpdate)) {
     Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
@@ -33,13 +32,13 @@ Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
 Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -AutoReboot -Verbose
 
 # Exclude specific updates from installing
-# Hide-WindowsUpdate -KBArticleID KB5026446
+# Hide-WindowsUpdate -KBArticleID KB5028185
 
-# Install specific update - Like the one with Mouse Pooling fixes KB5026446
-# Install-WindowsUpdate -KBArticleID KB5026446
+# Install specific update - Like the one with Mouse Pooling fixes KB5028185
+# Install-WindowsUpdate -KBArticleID KB5028185
 
 # Remove specific update
-# Remove-WindowsUpdate -KBArticleID KB5026446
+# Remove-WindowsUpdate -KBArticleID KB5028185
 
 # Check if update require reboot
 # Get-WURebootStatus
