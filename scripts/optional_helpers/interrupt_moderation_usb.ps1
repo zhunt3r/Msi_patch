@@ -75,35 +75,22 @@ function Startup-Ask {
 }
 
 function Apply-Tool-Compatibility-Registries {
-	$reg1 = Get-ItemPropertyValue "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" -Name Enabled
-	$reg2 = Get-ItemPropertyValue "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios" -Name HypervisorEnforcedCodeIntegrity
-	$reg3 = Get-ItemPropertyValue "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard" -Name EnableVirtualizationBasedSecurity
-	$reg4 = Get-ItemPropertyValue "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\SystemGuard" -Name Enabled
-	$reg5 = Get-ItemPropertyValue "HKLM:\SYSTEM\CurrentControlSet\Control\CI\Config" -Name VulnerableDriverBlocklistEnable
-
-	if ($reg1 -eq '0' -and $reg2 -eq '0' -and $reg3 -eq '0' -and $reg4 -eq '0' -and $reg5 -eq '0') {
+	$driverBlockReg = Get-ItemPropertyValue "HKLM:\SYSTEM\CurrentControlSet\Control\CI\Config" -Name VulnerableDriverBlocklistEnable -ErrorAction Ignore
+	if ($driverBlockReg -eq '0') {
 		return
 	}
-
 	[Environment]::NewLine
-	Write-Host "If you are running this script the first time, you might need to accept the compatibility regs and do a reboot after, for them to work."
-	Write-Host "What the reg changes do? They disable certain security features that block the tool. Use at you own risk."
+	Write-Host "If you are running this script the first time, you might need to accept the compatibility reg and do a reboot after, for it to work."
+	Write-Host "What the reg change do? It's to disable a certain security feature that block the tool used in the script. Use at you own risk."
 	[Environment]::NewLine
-	$ask = Read-Host "Do you wish to apply the compatibility registries? [Y] or [N]"
+	$ask = Read-Host "Do you wish to apply the compatibility registry? [Y] or [N]"
 	[Environment]::NewLine
-
 	if ($ask -ne 'Y') {
 		Write-Host "You choose not to apply, you might have problems running the script. In case you do, try re-running the script and accepting."
 		[Environment]::NewLine
 		return
 	}
-
-	Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" -Name Enabled -Value 0 -Force -Type Dword -ErrorAction Ignore
-	Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios" -Name HypervisorEnforcedCodeIntegrity -Value 0 -Force -Type Dword -ErrorAction Ignore
-	Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard" -Name EnableVirtualizationBasedSecurity -Value 0 -Force -Type Dword -ErrorAction Ignore
-	Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\SystemGuard" -Name Enabled -Value 0 -Force -Type Dword -ErrorAction Ignore
 	Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\CI\Config" -Name VulnerableDriverBlocklistEnable -Value 0 -Force -Type Dword -ErrorAction Ignore
-
 	Write-Host "You can now restart your computer."
 	[Environment]::NewLine
 	exit
