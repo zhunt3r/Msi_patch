@@ -7,7 +7,7 @@
 
 	Anyone that want to try find the Win11 solution can do with this script, all you would have to do is add / remove rules and/or items. Everything else should be automated.
 
-	I add a new way to support different OS and builds, a Rule variable, pattern is below in how it works. Anyone are able to test and contribute in different builds. Beware, if DWM are not disabled in any of the builds, it might need additional checks at Is-DWM-Enabled
+	I add a new way to support different OS and builds, a Rule variable, pattern is below in how it works. Anyone are able to test and contribute in different builds. Beware, if DWM.exe are not going to be disabled in any of the builds. You might need to add additional checks at Is-DWM-Enabled
 
 	-------------------------
 
@@ -45,7 +45,7 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 $OpenShellFilePath = "$PSScriptRoot\OpenShell-Latest.exe"
 $DLLPath = "$env:SystemRoot\System32"
 
-# Follow this pattern to add rules (OSs-:Edition-FromBuild.FromPatch-ToBuild.ToPatch) e.g., "Win7-Win10:20H1-Build.Patch-Build.Patch;Win7:19H1-Build.Patch-Build.Patch;Win10:21H2-Build.Patch-Build.Patch", alternatively you can add -All if that windows edition (e.g., 22H2) are supported from the first to the last build and patch. Beware, there are 4 different possible separators (- : ; .)
+# Follow this pattern to add rules (OSs-:Edition-FromBuild.FromPatch-ToBuild.ToPatch;) e.g., "Win7-Win10:20H1-Build.Patch-Build.Patch;Win7:19H1-Build.Patch-Build.Patch;Win10:21H2-Build.Patch-Build.Patch", alternatively you can add -All if that windows edition (e.g., 22H2) are supported from the first to the last build and patch. Beware, there are 4 different possible separators (- : ; .)
 
 $DLLs = @(
 	[PsObject]@{Name = 'UIRibbon'; Rules = 'Win10:22H2-All'},
@@ -250,6 +250,7 @@ function Disable-Executables {
 			continue
 		}
 		$Path = $item.Path
+		Write-Host "$Path"
 		$Filename = Get-Filename-From-Path -value $Path
 		Stop-Process -Name $Filename -Force -ErrorAction Ignore
 		if (Test-Path -Path $Path) {
@@ -261,6 +262,7 @@ function Disable-Executables {
 			Run-Command-With-Elevated-Permission -value "Copy-Item -Path $FromFile -Destination $ToFile -Force -ErrorAction Ignore"
 		}
 	}
+	[Environment]::NewLine
 }
 
 function Enable-Executables {
@@ -271,6 +273,7 @@ function Enable-Executables {
 			continue
 		}
 		$Path = $item.Path
+		Write-Host "$Path"
 		$Filename = Get-Filename-From-Path -value $Path
 		$FilePathBackup = "$Path.backup"
 		if (Test-Path -Path $FilePathBackup) {
@@ -283,6 +286,7 @@ function Enable-Executables {
 			Run-Command-With-Elevated-Permission -value "Move-Item -Path $FilePathBackup -Destination $item -Force -ErrorAction Ignore"
 		}
 	}
+	[Environment]::NewLine
 }
 
 function Disable-DLLs {
@@ -294,10 +298,12 @@ function Disable-DLLs {
 		}
 		$DLL = $item.Name
 		$FilePath = "$DLLPath\$DLL.dll"
+		Write-Host "$FilePath"
 		if (Test-Path -Path $FilePath) {
 			Run-Command-With-Elevated-Permission -value "Move-Item -Path $FilePath -Destination $FilePath.backup -Force -ErrorAction Ignore"
 		}
 	}
+	[Environment]::NewLine
 }
 
 function Enable-DLLs {
@@ -309,11 +315,13 @@ function Enable-DLLs {
 		}
 		$DLL = $item.Name
 		$FilePath = "$DLLPath\$DLL.dll"
+		Write-Host "$FilePath"
 		$FilePathBackup = "$FilePath.backup"
 		if (Test-Path -Path $FilePathBackup) {
 			Run-Command-With-Elevated-Permission -value "Move-Item -Path $FilePathBackup -Destination $FilePath -Force -ErrorAction Ignore"
 		}
 	}
+	[Environment]::NewLine
 }
 
 function Disable-Services {
@@ -324,8 +332,10 @@ function Disable-Services {
 			continue
 		}
 		$Service = $item.Name
+		Write-Host "$Service"
 		Run-Command-With-Elevated-Permission -value "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\services\$Service' -Name Start -Value 4 -Force -Type Dword -ErrorAction Ignore"
 	}
+	[Environment]::NewLine
 }
 
 function Enable-Services {
@@ -336,8 +346,10 @@ function Enable-Services {
 			continue
 		}
 		$Service = $item.Name
+		Write-Host "$Service"
 		Run-Command-With-Elevated-Permission -value "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\services\$Service' -Name Start -Value $($item.DefaultValue) -Force -Type Dword -ErrorAction Ignore"
 	}
+	[Environment]::NewLine
 }
 
 function Show-OS-Info {
