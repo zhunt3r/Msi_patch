@@ -41,7 +41,7 @@
 - NBIO Common Options > SMU Common Options > SOC P-State - **P0**
 - NBIO Common Options > SMU Common Options > DF Cstates - **Disabled**
 - NBIO Common Options > SMU Common Options > NBIO LCLK DPM - **Manual and all to 2**
-- PEG ASPM - **Disabled**
+- PCIe PEG ASPM - **Disabled**
 - PCIe Clock Gating - **Disabled**
 
 ## Intel

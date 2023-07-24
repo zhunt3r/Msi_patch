@@ -104,6 +104,9 @@ winget install -e --id Microsoft.WindowsTerminal
 :: Test to find WHEA errors
 :: choco install occt -y
 
+:: Audio Player
+:: choco install foobar2000 -y
+
 :: One of the best tunneling tools to lower ping/use better routes for MMORPGs
 :: https://www.exitlag.com/
 

@@ -20,6 +20,15 @@
 
 	-------------------------
 
+	Alternatively, by using HE, one could read and write using.
+
+	HE_v1.22.10.19_Portable.exe /RdMem32 [MemAddr] -> Get 4 byte Memory data
+	HE_v1.22.10.19_Portable.exe /WrMem32 [MemAddr] [Data] -> Set 4 byte Memory data
+
+	But it would possibly require small changes in the data used.
+
+	-------------------------
+
 	In case you get problems running the script in Win11, you can run the command to allow, and after, another to set back to a safer or undefined policy. But if you have set to be run at every startup, you might want to keep the bypass without changing it back.
 
 	You can check the current policy settings
