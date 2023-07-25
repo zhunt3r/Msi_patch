@@ -12,8 +12,9 @@
 	https://github.com/Faintsnow/HE - HwRwDrv driver
 	https://github.com/Faintsnow/HE/issues/5#issuecomment-1172197067 - KX Utility
 
-	Note1: RW command will not run if you have the GUI version open.
+	Note1: RW command will not run if you have the GUI version open. This is handled automatically, just a note.
 	Note2: You should be able to run this script through cmd, powershell or UI, as long as you have downloaded the gaming_os_tweaks folder and are keeping the file in the folder that it belongs.
+	Note3: It seems that to not have RW NON-GUI blocked, it requires you to run the GUI version at least once, it's being done automatically, it opens for a second and are closed automatically.
 
 	Credits to @BoringBoredom, @amitxv and @djdallmann for helping in different ways.
 
