@@ -77,12 +77,11 @@ function Startup-Ask {
 }
 
 function Apply-Tool-Compatibility-Registries {
-	$memoryIntegrityReg = Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Enabled -ErrorAction SilentlyContinue
-	$virtualizationBasedSecurityReg = Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard" -ErrorAction SilentlyContinue | Select-Object -ExpandProperty EnableVirtualizationBasedSecurity -ErrorAction SilentlyContinue
-	$vulnerableDriverBlocklistReg = Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\CI\Config" -ErrorAction SilentlyContinue | Select-Object -ExpandProperty VulnerableDriverBlocklistEnable -ErrorAction SilentlyContinue
+	$memoryIntegrityReg = Get-Reg-Value -path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" -name Enabled
+	$virtualizationBasedSecurityReg = Get-Reg-Value -path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard" -name EnableVirtualizationBasedSecurity
+	$vulnerableDriverBlocklistReg = Get-Reg-Value -path "HKLM:\SYSTEM\CurrentControlSet\Control\CI\Config" -name VulnerableDriverBlocklistEnable
 	if ($memoryIntegrityReg -eq '0' -and $virtualizationBasedSecurityReg -eq '0' -and $vulnerableDriverBlocklistReg -eq '0') {
-		& "$RWPath\Rw.exe" /Min /NoLogo
-		Start-Sleep -Seconds 1
+		Temporarily-Open-RW-GUI
 		return
 	}
 	[Environment]::NewLine
@@ -186,6 +185,17 @@ function Clean-Up {
 	Remove-Item -Path "HKCU:\SOFTWARE\RW-Everything" -Recurse -ErrorAction Ignore
 }
 
+function Temporarily-Open-RW-GUI {
+	& "$RWPath\Rw.exe" /Min /NoLogo
+	Start-Sleep -Seconds 1
+	Clean-Up
+}
+
+function Get-Reg-Value {
+	param ([string] $path, [string] $name)
+	return Get-ItemProperty -Path $path -ErrorAction SilentlyContinue | Select-Object -ExpandProperty $name -ErrorAction SilentlyContinue
+}
+
 function Get-Left-Side-From-MemoryRange {
 	param ([string] $memoryRange)
 	return $memoryRange.Split("-")[0]
@@ -196,17 +206,6 @@ function Get-BitRange-From-Binary {
 	$backwardsFrom = $to
 	$backwardsTo = $from
 	return $binaryValue.SubString($binaryValue.Length - $backwardsFrom, $backwardsFrom - $backwardsTo)
-}
-
-function Get-VendorId {
-	param ([string] $deviceId)
-	if ([string]::IsNullOrWhiteSpace($deviceId)) {
-		return "None"
-	}
-	$deviceIdMinInfo = $deviceId.Split("\")[1].Split("&")
-	$deviceIdVENValue = $deviceIdMinInfo[0].Split("_")[1]
-	$deviceIdDEVValue = $deviceIdMinInfo[1].Split("_")[1]
-	return "0x" + $deviceIdDEVValue + $deviceIdVENValue
 }
 
 function Find-First-Interrupter-Data {
@@ -307,12 +306,10 @@ function Execute-IMOD-Process {
 		}
 
 		[Environment]::NewLine
-		$VendorId = Get-VendorId -deviceId $item.DeviceId
 		Write-Host "Device: $($item.Name)"
 		Write-Host "Device ID: $($item.DeviceId)"
 		Write-Host "Location Info: $($item.LocationInfo)"
 		Write-Host "PDO Name: $($item.PDOName)"
-		Write-Host "Vendor ID: $VendorId"
 		Write-Host "Device Type: $($item.Type)"
 		Write-Host "Memory Range: $($item.MemoryRange)"
 		Write-Host "Interrupters Count: $InterruptersAmount"
