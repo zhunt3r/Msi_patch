@@ -76,9 +76,9 @@ function Startup-Ask {
 }
 
 function Apply-Tool-Compatibility-Registries {
-	$memoryIntegrityReg = Get-ItemPropertyValue "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" -Name Enabled -ErrorAction Ignore
-	$virtualizationBasedSecurityReg = Get-ItemPropertyValue "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard" -Name EnableVirtualizationBasedSecurity -ErrorAction Ignore
-	$vulnerableDriverBlocklistReg = Get-ItemPropertyValue "HKLM:\SYSTEM\CurrentControlSet\Control\CI\Config" -Name VulnerableDriverBlocklistEnable -ErrorAction Ignore
+	$memoryIntegrityReg = Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" | Select-Object -ExpandProperty Enabled -ErrorAction SilentlyContinue
+	$virtualizationBasedSecurityReg = Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard" | Select-Object -ExpandProperty EnableVirtualizationBasedSecurity -ErrorAction SilentlyContinue
+	$vulnerableDriverBlocklistReg = Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\CI\Config" | Select-Object -ExpandProperty VulnerableDriverBlocklistEnable -ErrorAction SilentlyContinue
 	if ($memoryIntegrityReg -eq '0' -and $virtualizationBasedSecurityReg -eq '0' -and $vulnerableDriverBlocklistReg -eq '0') {
 		& "$RWPath\Rw.exe" /Min /NoLogo
 		return
@@ -95,9 +95,9 @@ function Apply-Tool-Compatibility-Registries {
 		return
 	}
 	# It's been shared that setting "bcdedit /set testsigning on", restarting and running the script once after, and removing "bcdedit /deletevalue testsigning" worked. I didnt confirm it.
-	Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" -Name Enabled -Value 0 -Force -Type Dword -ErrorAction Ignore
-	Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard" -Name EnableVirtualizationBasedSecurity -Value 0 -Force -Type Dword -ErrorAction Ignore
-	Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\CI\Config" -Name VulnerableDriverBlocklistEnable -Value 0 -Force -Type Dword -ErrorAction Ignore
+	Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" -Name Enabled -Value 0 -Force -Type Dword -ErrorAction SilentlyContinue
+	Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard" -Name EnableVirtualizationBasedSecurity -Value 0 -Force -Type Dword -ErrorAction SilentlyContinue
+	Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\CI\Config" -Name VulnerableDriverBlocklistEnable -Value 0 -Force -Type Dword -ErrorAction SilentlyContinue
 	Write-Host "You can now restart your computer."
 	[Environment]::NewLine
 	exit
