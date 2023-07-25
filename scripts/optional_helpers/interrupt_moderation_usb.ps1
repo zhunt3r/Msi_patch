@@ -8,8 +8,9 @@
 	https://www.overclock.net/threads/usb-polling-precision.1550666/page-61#post-28580928
 	https://github.com/djdallmann/GamingPCSetup/issues/12
 	https://www.overclock.net/threads/usb-polling-precision.1550666/page-61#post-28582024
-	http://rweverything.com/
-	https://github.com/Faintsnow/HE
+	http://rweverything.com/ - RwDrv driver
+	https://github.com/Faintsnow/HE - HwRwDrv driver
+	https://github.com/Faintsnow/HE/issues/5#issuecomment-1172197067 - KX Utility
 
 	Note1: RW command will not run if you have the GUI version open.
 	Note2: You should be able to run this script through cmd, powershell or UI, as long as you have downloaded the gaming_os_tweaks folder and are keeping the file in the folder that it belongs.
@@ -17,15 +18,6 @@
 	Credits to @BoringBoredom, @amitxv and @djdallmann for helping in different ways.
 
 	Additional Note: It's recommended that if you are on Win11, to have updated at least up to 07-2023 Cumulative Update KB5028185, because it contains a mouse pooling improvement.
-
-	-------------------------
-
-	Alternatively, by using HE, one could read and write using.
-
-	HE_v1.22.10.19_Portable.exe /RdMem32 [MemAddr] -> Get 4 byte Memory data
-	HE_v1.22.10.19_Portable.exe /WrMem32 [MemAddr] [Data] -> Set 4 byte Memory data
-
-	But it would possibly require small changes in the data used.
 
 	-------------------------
 
@@ -88,6 +80,7 @@ function Apply-Tool-Compatibility-Registries {
 	$virtualizationBasedSecurityReg = Get-ItemPropertyValue "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard" -Name EnableVirtualizationBasedSecurity -ErrorAction Ignore
 	$vulnerableDriverBlocklistReg = Get-ItemPropertyValue "HKLM:\SYSTEM\CurrentControlSet\Control\CI\Config" -Name VulnerableDriverBlocklistEnable -ErrorAction Ignore
 	if ($memoryIntegrityReg -eq '0' -and $virtualizationBasedSecurityReg -eq '0' -and $vulnerableDriverBlocklistReg -eq '0') {
+		& "$RWPath\Rw.exe" /Min /NoLogo
 		return
 	}
 	[Environment]::NewLine
@@ -187,7 +180,7 @@ function Get-R32-Hex-From-Address {
 }
 
 function Clean-Up {
-	Stop-Process -Name Rw.exe -Force -ErrorAction Ignore
+	Stop-Process -Name Rw -Force -ErrorAction Ignore
 	Remove-Item -Path "HKCU:\SOFTWARE\RW-Everything" -Recurse -ErrorAction Ignore
 }
 

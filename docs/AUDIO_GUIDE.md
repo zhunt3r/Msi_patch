@@ -23,3 +23,7 @@
     - <https://www.reddit.com/r/EscapefromTarkov/comments/f04go3/comment/fgs0sgw/?utm_source=share&utm_medium=web2x&context=3>
     - <https://www.youtube.com/watch?v=vXuAwpt4WsQ>
     - <https://www.youtube.com/watch?v=OeW5sZ6djt8>
+
+- FiiO BTR5 2021 DAC/AMP
+  - Driver - <https://forum.fiio.com/note/showNoteContent.do?id=202105191527366657910&tid=17>
+  - Firmware - <https://forum.fiio.com/note/showNoteContent.do?id=202204291000067884656&tid=117> - <https://forum.fiio.com/note/showNoteContent.do?id=202109101658479885270>
