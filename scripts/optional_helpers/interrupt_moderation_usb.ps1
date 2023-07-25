@@ -76,11 +76,12 @@ function Startup-Ask {
 }
 
 function Apply-Tool-Compatibility-Registries {
-	$memoryIntegrityReg = Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" | Select-Object -ExpandProperty Enabled -ErrorAction SilentlyContinue
-	$virtualizationBasedSecurityReg = Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard" | Select-Object -ExpandProperty EnableVirtualizationBasedSecurity -ErrorAction SilentlyContinue
-	$vulnerableDriverBlocklistReg = Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\CI\Config" | Select-Object -ExpandProperty VulnerableDriverBlocklistEnable -ErrorAction SilentlyContinue
+	$memoryIntegrityReg = Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Enabled -ErrorAction SilentlyContinue
+	$virtualizationBasedSecurityReg = Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard" -ErrorAction SilentlyContinue | Select-Object -ExpandProperty EnableVirtualizationBasedSecurity -ErrorAction SilentlyContinue
+	$vulnerableDriverBlocklistReg = Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\CI\Config" -ErrorAction SilentlyContinue | Select-Object -ExpandProperty VulnerableDriverBlocklistEnable -ErrorAction SilentlyContinue
 	if ($memoryIntegrityReg -eq '0' -and $virtualizationBasedSecurityReg -eq '0' -and $vulnerableDriverBlocklistReg -eq '0') {
 		& "$RWPath\Rw.exe" /Min /NoLogo
+		Start-Sleep -Seconds 1
 		return
 	}
 	[Environment]::NewLine
@@ -94,7 +95,7 @@ function Apply-Tool-Compatibility-Registries {
 		[Environment]::NewLine
 		return
 	}
-	New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" -Force -ErrorAction SilentlyContinue
+	New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" -Force -ErrorAction SilentlyContinue | Out-Null
 	Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" -Name Enabled -Value 0 -Force -Type Dword -ErrorAction SilentlyContinue
 	Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard" -Name EnableVirtualizationBasedSecurity -Value 0 -Force -Type Dword -ErrorAction SilentlyContinue
 	Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\CI\Config" -Name VulnerableDriverBlocklistEnable -Value 0 -Force -Type Dword -ErrorAction SilentlyContinue
