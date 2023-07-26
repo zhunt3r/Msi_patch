@@ -120,6 +120,7 @@ function Get-Type-From-Service {
 
 function Convert-Decimal-To-Hex {
 	param ([int64] $value)
+	if ([string]::IsNullOrWhiteSpace($value)) { $value = "0x0" }
 	return '0x' + [System.Convert]::ToString($value, 16).ToUpper()
 }
 
@@ -255,7 +256,7 @@ function Execute-IMOD-Process {
 			$FirstInterrupterData = Find-First-Interrupter-Data -memoryRange $item.MemoryRange
 			$InterruptersAmount = Find-Interrupters-Amount -hcsParams1 $FirstInterrupterData.HCSPARAMS1
 			$AllInterrupters = Get-All-Interrupters -preAddressInDecimal $FirstInterrupterData.Interrupter0PreAddressInDecimal -interruptersAmount $InterruptersAmount
-			
+
 			foreach ($interrupterItem in $AllInterrupters) {
 				Disable-IMOD -address $interrupterItem.ValueAddress
 				Write-Host "Disabled IMOD - Interrupter $($interrupterItem.Interrupter) - Interrupter Address $($interrupterItem.InterrupterAddress) - Value Address $($interrupterItem.ValueAddress)"
