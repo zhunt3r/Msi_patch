@@ -36,7 +36,7 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 	Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs; exit
 }
 
-$RWPath = "$(Split-Path -Path $PSScriptRoot -Parent)\tools\RW"
+$KXPath = "$(Split-Path -Path $PSScriptRoot -Parent)\tools"
 
 function Get-Task-Info {
 	$taskName = "InterruptModerationUsb"
@@ -74,34 +74,6 @@ function Startup-Ask {
 		[Environment]::NewLine
 		Apply-Startup-Script
 	}
-}
-
-function Apply-Tool-Compatibility-Registries {
-	$memoryIntegrityReg = Get-Reg-Value -path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" -name Enabled
-	$virtualizationBasedSecurityReg = Get-Reg-Value -path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard" -name EnableVirtualizationBasedSecurity
-	$vulnerableDriverBlocklistReg = Get-Reg-Value -path "HKLM:\SYSTEM\CurrentControlSet\Control\CI\Config" -name VulnerableDriverBlocklistEnable
-	if ($memoryIntegrityReg -eq '0' -and $virtualizationBasedSecurityReg -eq '0' -and $vulnerableDriverBlocklistReg -eq '0') {
-		Temporarily-Open-RW-GUI
-		return
-	}
-	[Environment]::NewLine
-	Write-Host "If you are running this script the first time, you might need to accept the compatibility registries and do a reboot after, for it to work."
-	Write-Host "What the regs changes do? They disable certain security features that block the tool used in the script. Use at you own risk."
-	[Environment]::NewLine
-	$ask = Read-Host "Do you wish to apply the compatibility registries? [Y] or [N]"
-	[Environment]::NewLine
-	if ($ask -ne 'Y') {
-		Write-Host "You choose not to apply, you might have problems running the script. In case you do, try re-running the script and accepting."
-		[Environment]::NewLine
-		return
-	}
-	New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" -Force -ErrorAction SilentlyContinue | Out-Null
-	Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" -Name Enabled -Value 0 -Force -Type Dword -ErrorAction SilentlyContinue
-	Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard" -Name EnableVirtualizationBasedSecurity -Value 0 -Force -Type Dword -ErrorAction SilentlyContinue
-	Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\CI\Config" -Name VulnerableDriverBlocklistEnable -Value 0 -Force -Type Dword -ErrorAction SilentlyContinue
-	Write-Host "You can now restart your computer."
-	[Environment]::NewLine
-	exit
 }
 
 function Get-All-USB-Controllers {
@@ -170,25 +142,14 @@ function Convert-Binary-To-Hex {
 
 function Get-Hex-Value-From-RW-Result {
 	param ([string] $value)
-	return $value.Split("=")[1].Trim()
+	return $value.Split(" ")[19].Trim()
 }
 
 function Get-R32-Hex-From-Address {
 	param ([string] $address)
-	$Value = & "$RWPath\Rw.exe" /Min /NoLogo /Stdout /Command="R32 $address" 2>&1 | Out-String
+	$Value = & "$KXPath\KX.exe" /RdMem32 $address
 	while ([string]::IsNullOrWhiteSpace($Value)) { Start-Sleep -Seconds 1 }
 	return Get-Hex-Value-From-RW-Result -value $Value
-}
-
-function Clean-Up {
-	Stop-Process -Name Rw -Force -ErrorAction Ignore
-	Remove-Item -Path "HKCU:\SOFTWARE\RW-Everything" -Recurse -ErrorAction Ignore
-}
-
-function Temporarily-Open-RW-GUI {
-	& "$RWPath\Rw.exe" /Min /NoLogo
-	Start-Sleep -Seconds 1
-	Clean-Up
 }
 
 function Get-Reg-Value {
@@ -253,8 +214,9 @@ function Find-Interrupters-Amount {
 
 function Disable-IMOD {
 	param ([string] $address, [string] $value)
-	$valueData = if ([string]::IsNullOrWhiteSpace($value)) { return '0x00000000' } else { return $value }
-	$Value = & "$RWPath\Rw.exe" /Min /NoLogo /Stdout /Command="W32 $address $valueData" 2>&1 | Out-String
+	$ValueData = "0x00000000"
+	if (![string]::IsNullOrWhiteSpace($value)) { $ValueData = $value }
+	$Value = & "$KXPath\KX.exe" /WrMem32 $address $valueData
 	while ([string]::IsNullOrWhiteSpace($Value)) { Start-Sleep -Seconds 1 }
 }
 
@@ -293,7 +255,7 @@ function Execute-IMOD-Process {
 			$FirstInterrupterData = Find-First-Interrupter-Data -memoryRange $item.MemoryRange
 			$InterruptersAmount = Find-Interrupters-Amount -hcsParams1 $FirstInterrupterData.HCSPARAMS1
 			$AllInterrupters = Get-All-Interrupters -preAddressInDecimal $FirstInterrupterData.Interrupter0PreAddressInDecimal -interruptersAmount $InterruptersAmount
-
+			
 			foreach ($interrupterItem in $AllInterrupters) {
 				Disable-IMOD -address $interrupterItem.ValueAddress
 				Write-Host "Disabled IMOD - Interrupter $($interrupterItem.Interrupter) - Interrupter Address $($interrupterItem.InterrupterAddress) - Value Address $($interrupterItem.ValueAddress)"
@@ -322,13 +284,7 @@ function Execute-IMOD-Process {
 
 # --------------------------------------------------------------------------------------------
 
-Apply-Tool-Compatibility-Registries
-
-Clean-Up
-
 Execute-IMOD-Process
-
-Clean-Up
 
 Startup-Ask
 
