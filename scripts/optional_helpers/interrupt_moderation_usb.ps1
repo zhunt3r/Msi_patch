@@ -12,7 +12,7 @@
 	https://github.com/Faintsnow/HE - HwRwDrv driver
 	https://github.com/Faintsnow/HE/issues/5#issuecomment-1172197067 - KX Utility
 
-	Note: You should be able to run this script through cmd, powershell or UI, as long as you have downloaded the gaming_os_tweaks folder and are keeping the file in the folder that it belongs.
+	Note: It will download the tool used, automatically, if that is not available. You dont need the whole folder anymore, just this script will be enough.
 
 	Credits to @BoringBoredom, @amitxv and @djdallmann for helping in different ways.
 
@@ -34,7 +34,30 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 	Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs; exit
 }
 
-$KXPath = "$(Split-Path -Path $PSScriptRoot -Parent)\tools"
+$ToolsKX = "$(Split-Path -Path $PSScriptRoot -Parent)\tools\KX.exe"
+$LocalKX = "$PSScriptRoot\KX.exe"
+
+function KX-Exists {
+	$ToolsKXExists = Test-Path -Path $ToolsKX -PathType Leaf
+	$LocalKXExists = Test-Path -Path $LocalKX -PathType Leaf
+	return @{LocalKXExists = $LocalKXExists; ToolsKXExists = $ToolsKXExists}
+}
+
+function Download-KX {
+	$KXExists = KX-Exists
+	if ($KXExists.ToolsKXExists -or $KXExists.LocalKXExists) {
+		return
+	}
+	$downloadUrl = "https://github.com/dougg0k/gaming_os_tweaker/raw/main/scripts/tools/KX.exe"
+	Write-Host "KX Utility not found, started downloading - $downloadUrl"
+	[Environment]::NewLine
+	Invoke-WebRequest -URI $downloadUrl -OutFile $LocalKX -UseBasicParsing
+}
+
+function Get-KX {
+	$KXExists = KX-Exists
+	if ($KXExists.ToolsKXExists) { return $ToolsKX } else { return $LocalKX }
+}
 
 function Get-Task-Info {
 	$taskName = "InterruptModerationUsb"
@@ -147,7 +170,7 @@ function Get-Hex-Value-From-RW-Result {
 
 function Get-R32-Hex-From-Address {
 	param ([string] $address)
-	$Value = & "$KXPath\KX.exe" /RdMem32 $address
+	$Value = & "$(Get-KX)" /RdMem32 $address
 	while ([string]::IsNullOrWhiteSpace($Value)) { Start-Sleep -Seconds 1 }
 	return Get-Hex-Value-From-RW-Result -value $Value
 }
@@ -216,7 +239,7 @@ function Disable-IMOD {
 	param ([string] $address, [string] $value)
 	$ValueData = "0x00000000"
 	if (![string]::IsNullOrWhiteSpace($value)) { $ValueData = $value }
-	$Value = & "$KXPath\KX.exe" /WrMem32 $address $valueData
+	$Value = & "$(Get-KX)" /WrMem32 $address $valueData
 	while ([string]::IsNullOrWhiteSpace($Value)) { Start-Sleep -Seconds 1 }
 }
 
@@ -283,6 +306,8 @@ function Execute-IMOD-Process {
 }
 
 # --------------------------------------------------------------------------------------------
+
+Download-KX
 
 Execute-IMOD-Process
 
