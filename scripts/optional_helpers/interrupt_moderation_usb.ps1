@@ -118,12 +118,13 @@ function Get-Type-From-Service {
 
 function Convert-Decimal-To-Hex {
 	param ([int64] $value)
-	if ([string]::IsNullOrWhiteSpace($value)) { $value = "0x0" }
+	if ([string]::IsNullOrWhiteSpace($value)) { $value = "0" }
 	return '0x' + [System.Convert]::ToString($value, 16).ToUpper()
 }
 
 function Convert-Hex-To-Decimal {
 	param ([string] $value)
+	if ([string]::IsNullOrWhiteSpace($value)) { $value = "0x0" }
 	return [convert]::ToInt64($value, 16)
 }
 
