@@ -232,7 +232,7 @@ foreach ($item in $relevantData) {
 
 	Set-ItemProperty -Path $parentAffinityPath -Name "AssignmentSetOverride" -Value $coreData.Decimal -Force -Type Qword -ErrorAction Ignore
 	Set-ItemProperty -Path $childAffinityPath -Name "AssignmentSetOverride" -Value $coreData.Decimal -Force -Type Qword -ErrorAction Ignore
-	
+
 	$ChildDeviceLocationInfo = if (Is-Empty-Str -value $item.ChildDeviceLocationInfo) { "None" } else { $item.ChildDeviceLocationInfo }
 	Write-Host "Assigned to Core $($coreData.Core)"
 	Write-Host "Device: $($item.ChildDeviceName) - $($item.ChildDeviceInstanceId)"
