@@ -54,6 +54,22 @@ Script can be found at [interrupt_moderation_usb.ps1](../scripts/optional_helper
 
 ---
 
+## Turn any 2D games into 3D SBS
+
+Useful if you have a supported 3D device or VR.
+
+It's a shader to Reshade <https://reshade.me/>
+
+- For single player games, use the version with addons support.
+
+<https://github.com/BlueSkyDefender/Depth3D>
+
+- Download and use `SuperDepth3D.fx` if you are not on VR, otherwise you might need another option. 
+- If you are on VR, try also using Companion App specified in the repository README.
+- You can put the `.fx` file somewhere where reshade was installed in the game folder, in case it's the wrong folder, you can open the game, press Home and check what folder it is expecting the shader to be on, if exists you add there, otherwise you can create the folder or just point to where the `.fx` are currently in, by altering reshade config. 
+
+---
+
 ## Interrupt Affinity Policy
 
 - Download at <https://www.techpowerup.com/download/microsoft-interrupt-affinity-tool/>

@@ -705,3 +705,6 @@ REG ADD "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Us
 
 :: Disable Sticky Edges between monitors
 REG ADD "HKEY_CURRENT_USER\Control Panel\Mouse" /v DockTargetMouseWidth /t REG_DWORD /d 0 /f
+
+:: Enable path longer than 260 characters
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem" /v LongPathsEnabled /t REG_DWORD /d 1 /f
