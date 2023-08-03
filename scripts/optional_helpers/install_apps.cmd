@@ -87,6 +87,8 @@ winget install -e --id qBittorrent.qBittorrent
 :: Gaming
 :: winget install -e --id Valve.Steam
 :: winget install -e --id EpicGames.EpicGamesLauncher
+:: choco install ubisoft-connect -y
+:: choco install ea-app -y
 :: winget install -e --id OBSProject.OBSStudio
 
 :: Test DPC and interrupt latency
