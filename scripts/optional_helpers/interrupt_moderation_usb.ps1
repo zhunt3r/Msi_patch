@@ -1,6 +1,8 @@
 <#
 	Automated script to disable Interrupt Moderation (XHCI) or Interrupt Threshold Control (EHCI) in all USB controllers.
 
+	-------------------------
+
 	https://www.overclock.net/threads/usb-polling-precision.1550666/page-61
 	https://github.com/djdallmann/GamingPCSetup/tree/master/CONTENT/RESEARCH/PERIPHERALS#universal-serial-bus-usb
 	https://github.com/BoringBoredom/PC-Optimization-Hub/blob/main/content/xhci%20imod/xhci%20imod.md
@@ -163,7 +165,7 @@ function Convert-Binary-To-Hex {
 	return Convert-Decimal-To-Hex -value $convertedValue
 }
 
-function Get-Hex-Value-From-RW-Result {
+function Get-Hex-Value-From-Tool-Result {
 	param ([string] $value)
 	return $value.Split(" ")[19].Trim()
 }
@@ -172,7 +174,7 @@ function Get-R32-Hex-From-Address {
 	param ([string] $address)
 	$Value = & "$(Get-KX)" /RdMem32 $address
 	while ([string]::IsNullOrWhiteSpace($Value)) { Start-Sleep -Seconds 1 }
-	return Get-Hex-Value-From-RW-Result -value $Value
+	return Get-Hex-Value-From-Tool-Result -value $Value
 }
 
 function Get-Reg-Value {

@@ -64,9 +64,10 @@ It's a shader to Reshade <https://reshade.me/>
 
 <https://github.com/BlueSkyDefender/Depth3D>
 
-- Download and use `SuperDepth3D.fx` if you are not on VR, otherwise you might need another option. 
+- Download and use `Shaders/SuperDepth3D.fx` if you are NOT on VR, otherwise you might need another option.
 - If you are on VR, try also using Companion App specified in the repository README.
-- You can put the `.fx` file somewhere where reshade was installed in the game folder, in case it's the wrong folder, you can open the game, press Home and check what folder it is expecting the shader to be on, if exists you add there, otherwise you can create the folder or just point to where the `.fx` are currently in, by altering reshade config. 
+- You can put the `.fx` file somewhere where reshade was installed in the game folder, in case it's the wrong folder, you can open the game, press Home and check what folder it is expecting the shader to be on, if exists you add there, otherwise you can create the folder or just point to where the `.fx` are currently in, by altering reshade config.
+- `Shaders/Overwatch.fxh` could also help in many games setting.
 
 ---
 
