@@ -11,3 +11,8 @@
 - KX Utility - <https://github.com/Faintsnow/HE/issues/5#issuecomment-1172197067>
 
 - Nvidia Control Panel - It's here if someone are unable to install from the driver into their system, not an actual helper tool.
+  - If `nvcplui.exe` get a block message, it means you might have a ownership problem, you can try one or more from the following commands, first you go to the unziped folder in powershell. (PS: You might NOT need all of them)
+  - `Get-Acl .\nvcplui.exe` to check current ownership information in a file
+  - `icacls * /t /q /c /reset` to reset ownership
+  - `icacls * /grant administrators:F /T` to assign administrator to every file in the folder
+  - `takeown /f * /r /d y` to take ownership
