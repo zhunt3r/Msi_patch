@@ -21,6 +21,7 @@
   - It should help reduce input lag / make it more responsive at some extent. <https://www.youtube.com/watch?v=x0wcJM4FtXQ> - <https://www.youtube.com/watch?v=ahsO5bhBUtk>
   - If you dont want to overclock, in some devices like controllers, you can at least reduce the input delay, by setting what will make bInterval to 1. <https://www.youtube.com/watch?v=_Sqgy95iAwE>
 - If you have a Logitech mouse, sometimes might be better to not have their software running in the background. You can download their portable solution at <https://support.logi.com/hc/en-us/articles/360059641133>
+- I feel that mouse above 1000hz, at least I got a 4000hz, there is a more responsive feel to the smaller adjustments, it's not as floaty, it's a small, but good improvement.
 
 ## Controller
 
