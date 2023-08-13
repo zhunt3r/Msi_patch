@@ -249,7 +249,7 @@ function Get-All-Interrupters {
 	param ([int64] $preAddressInDecimal, [int32] $interruptersAmount)
 	[PsObject[]]$Data = @()
 	if ($interruptersAmount -lt 1 -or $interruptersAmount -gt 1024) {
-		Write-Host "Device interrupters amount is different than specified MIN (1) and MAX (1024) - FOUND $interruptersAmount - No address from this device were IMOD disabled"
+		Write-Host "Device interrupters amount is different than specified MIN (1) and MAX (1024) - FOUND $interruptersAmount - No address from this device will be IMOD disabled"
 		return $Data
 	}
 	for ($i=0; $i -lt $interruptersAmount; $i++) {
