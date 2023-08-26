@@ -708,3 +708,11 @@ REG ADD "HKEY_CURRENT_USER\Control Panel\Mouse" /v DockTargetMouseWidth /t REG_D
 
 :: Enable path longer than 260 characters
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem" /v LongPathsEnabled /t REG_DWORD /d 1 /f
+
+:: Add context menu option to open with vscodium (optional)
+:: REG ADD "HKEY_CLASSES_ROOT\*\shell\Open with VS Codium" /ve /t REG_SZ /d "Edit with VS Codium" /f
+:: REG ADD "HKEY_CLASSES_ROOT\*\shell\Open with VS Codium" /v Icon /t REG_SZ /d "%localappdata%\Programs\VSCodium\VSCodium.exe" /f
+:: REG ADD "HKEY_CLASSES_ROOT\*\shell\Open with VS Codium\command" /ve /t REG_SZ /d "%localappdata%\Programs\VSCodium\VSCodium.exe %1" /f
+
+:: Hide Language bar
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\CTF\LangBar" /v ShowStatus /t REG_DWORD /d 3 /f

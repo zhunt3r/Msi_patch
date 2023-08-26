@@ -18,8 +18,9 @@
     - Reset all interrupt affinity related options
     - Enable MSI to everything that supports
     - Change Priority to High and Disable MSI to both Mouse and LAN
+	- Higher interrupt limit to Mouse device controller
     - Apply each core (not thread) that is not 0 and is available to each type of devices that is being looked up (Mouse, LAN, GPU, Audio USB) and their proper parent device
-	- Keyboard will be disabled by default
+    - Keyboard will be disabled by default
 
   ---------------------------
 
@@ -95,6 +96,8 @@ function Apply-IRQ-Priotity-Optimization {
 	}
 }
 
+# ------------------------------------------------------
+
 # Priorities - Where lowest number is first.
 $priorities = @(
 	[PsObject]@{Class = 'Display'; Priority = 1; Enabled = $true; Description = 'GPU'; isUSB = $false},
@@ -103,6 +106,8 @@ $priorities = @(
 	[PsObject]@{Class = 'Media'; Priority = 4; Enabled = $false; Description = 'Audio'; isUSB = $true},
 	[PsObject]@{Class = 'Keyboard'; Priority = 5; Enabled = $false; Description = 'Keyboard'; isUSB = $true}
 )
+
+# ------------------------------------------------------
 
 $enabledClasses = $priorities | Where-Object { $_.Enabled -eq $true } | ForEach-Object { $_.Class }
 $enabledUSBClasses = $priorities | Where-Object { $_.Enabled -eq $true -and $_.isUSB -eq $true } | ForEach-Object { $_.Class }
@@ -204,6 +209,8 @@ foreach ($item in $relevantData) {
 	}
 }
 
+# ------------------------------------------------------
+
 # Apply interrupt affinity tweaks
 foreach ($item in $relevantData) {
 	if ($item.ClassType -eq 'Mouse' -or $item.ClassType -eq 'Keyboard') {
@@ -215,18 +222,19 @@ foreach ($item in $relevantData) {
 	$parentMsiPath = "HKLM:\SYSTEM\CurrentControlSet\Enum\$($item.ParentDeviceInstanceId)\Device Parameters\Interrupt Management\MessageSignaledInterruptProperties"
 	$childMsiPath = "HKLM:\SYSTEM\CurrentControlSet\Enum\$($item.ChildDeviceInstanceId)\Device Parameters\Interrupt Management\MessageSignaledInterruptProperties"
 
+	Set-ItemProperty -Path $parentAffinityPath -Name "DevicePolicy" -Value 4 -Force -Type Dword -ErrorAction Ignore
+	Set-ItemProperty -Path $childAffinityPath -Name "DevicePolicy" -Value 4 -Force -Type Dword -ErrorAction Ignore
+
 	if ($item.ClassType -eq 'Net') {
 		Set-ItemProperty -Path $childAffinityPath -Name "DevicePriority" -Value 3 -Force -Type Dword -ErrorAction Ignore
-		Set-ItemProperty -Path $childMsiPath -Name "MSISupported" -Value 0 -Force -Type Dword -ErrorAction Ignore
 		Set-ItemProperty -Path $childMsiPath -Name "MessageNumberLimit" -Value 2 -Force -Type Dword -ErrorAction Ignore
+		Set-ItemProperty -Path $childMsiPath -Name "MSISupported" -Value 0 -Force -Type Dword -ErrorAction Ignore
 	}
 	if ($item.ClassType -eq 'Mouse') {
 	 	Set-ItemProperty -Path $parentAffinityPath -Name "DevicePriority" -Value 3 -Force -Type Dword -ErrorAction Ignore
 		Set-ItemProperty -Path $parentMsiPath -Name "MSISupported" -Value 0 -Force -Type Dword -ErrorAction Ignore
+		Set-ItemProperty -Path $parentMsiPath -Name "MessageNumberLimit" -Value 2048 -Force -Type Dword -ErrorAction Ignore
 	}
-
-	Set-ItemProperty -Path $parentAffinityPath -Name "DevicePolicy" -Value 4 -Force -Type Dword -ErrorAction Ignore
-	Set-ItemProperty -Path $childAffinityPath -Name "DevicePolicy" -Value 4 -Force -Type Dword -ErrorAction Ignore
 
 	$coreData = $coresToBeUsed | Where-Object { $item.ClassType -eq $_.ClassType }
 
