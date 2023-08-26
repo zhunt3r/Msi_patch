@@ -46,6 +46,7 @@ Make sure you create a System Restore Point before running any scripts.
 - [PERIPHERALS_GUIDE](/docs/PERIPHERALS_GUIDE.md)
 - [SECURITY_GUIDE](/docs/SECURITY_GUIDE.md)
 - [LINUX_GAMING_GUIDE](/docs/LINUX_GAMING_GUIDE.md)
+- [CONSOLE_GUIDE](/docs/CONSOLE_GUIDE.md)
 - [WINDOWS_SNAPSHOT_GUIDE](/docs/WINDOWS_SNAPSHOT_GUIDE.md)
 
 ---
