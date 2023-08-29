@@ -69,6 +69,8 @@ Get-WmiObject Win32_USBController | Where-Object PNPDeviceID -Match "PCI\\VEN*" 
 Get-WmiObject Win32_NetworkAdapter | Where-Object PNPDeviceID -Match "PCI\\VEN*" | Select-Object -ExpandProperty PNPDeviceID | ForEach { $allPnpDeviceIds += $_ }
 Get-WmiObject Win32_IDEController | Where-Object PNPDeviceID -Match "PCI\\VEN*" | Select-Object -ExpandProperty PNPDeviceID | ForEach { $allPnpDeviceIds += $_ }
 Get-WmiObject Win32_SoundDevice | Where-Object PNPDeviceID -Match "PCI\\VEN*" | Select-Object -ExpandProperty PNPDeviceID | ForEach { $allPnpDeviceIds += $_ }
+Get-WmiObject Win32_DiskDrive | Where-Object PNPDeviceID -Match "PCI\\VEN*" | Select-Object -ExpandProperty PNPDeviceID | ForEach { $allPnpDeviceIds += $_ }
+
 foreach ($devicePath in $allPnpDeviceIds) {
 	$affinityPath = "HKLM:\SYSTEM\CurrentControlSet\Enum\$devicePath\Device Parameters\Interrupt Management\Affinity Policy"
 	$msiPath = "HKLM:\SYSTEM\CurrentControlSet\Enum\$devicePath\Device Parameters\Interrupt Management\MessageSignaledInterruptProperties"

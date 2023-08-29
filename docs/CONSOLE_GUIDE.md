@@ -7,7 +7,7 @@ How to have the lowest input lag
 - Use a HDMI 2.1 cable with a TV or Monitor that has support for it
 - Activate ALLM
 - Activate Performance Mode
-- Activate 120hz Output.
+- Activate 120hz Output
 - Use the native monitor/tv resolution or a lower one that might have 120hz support
 - (Optional) Try using VRR to reduce potential screen tearing due to frame drop / inconsistency
 - You can try using controllers in wired mode
