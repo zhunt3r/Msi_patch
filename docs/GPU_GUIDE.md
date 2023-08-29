@@ -30,7 +30,7 @@
 
 After Restart (Debloat)
 
-- Download at <https://www.techpowerup.com/download/techpowerup-nvcleanstall/> or the optional, but maybe less featured <https://forums.guru3d.com/threads/nvslimmer-nvidia-driver-slimming-utility.423072/>
+- Download at <https://www.techpowerup.com/download/techpowerup-nvcleanstall/> or the optional, but less featured <https://forums.guru3d.com/threads/nvslimmer-nvidia-driver-slimming-utility.423072/>
 - Download the nvidia driver that you want
 - Open NVCleanstall and select Use driver files on Disk > Select the driver
 - Next, I recommend the bare minimum `Display Driver (required)` only
