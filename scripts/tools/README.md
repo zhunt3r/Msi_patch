@@ -16,3 +16,5 @@
   - `icacls * /t /q /c /reset` to reset ownership
   - `icacls * /grant administrators:F /T` to assign administrator to every file in the folder
   - `takeown /f * /r /d y` to take ownership
+
+- Low Audio Latency - <https://github.com/spddl/LowAudioLatency/releases>
