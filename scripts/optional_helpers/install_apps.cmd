@@ -41,6 +41,9 @@ powershell -c "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.Ser
 :: https://apps.microsoft.com/store/detail/netflix/9WZDNCRFJ3TJ
 :: winget install -e --id 9WZDNCRFJ3TJ
 
+:: You can turn microsoft store links into directly urls
+:: https://store.rg-adguard.net/
+
 :: Send feedback / bug report to Microsoft with Feedback Hub
 :: winget install -e --id 9NBLGGH4R32N --accept-source-agreements --accept-package-agreements
 

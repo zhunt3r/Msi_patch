@@ -131,7 +131,10 @@ powershell "Get-AppxPackage -Allusers *Microsoft.PrintDialog* | Remove-AppxPacka
 :: powershell "Get-AppxPackage -Allusers *Microsoft.WindowsCalculator* | Remove-AppxPackage"
 powershell "Get-AppxPackage -Allusers *Microsoft.WebpImageExtension* | Remove-AppxPackage"
 powershell "Get-AppxPackage -Allusers *Microsoft.WebMediaExtensions* | Remove-AppxPackage"
-powershell "Get-AppxPackage -Allusers *Microsoft.VP9VideoExtensions* | Remove-AppxPackage"
+
+:: Keep VP9, otherwise might break some games cutscene
+:: powershell "Get-AppxPackage -Allusers *Microsoft.VP9VideoExtensions* | Remove-AppxPackage"
+
 powershell "Get-AppxPackage -Allusers *Microsoft.HEIFImageExtension* | Remove-AppxPackage"
 powershell "Get-AppxPackage -Allusers *Windows.CBSPreview* | Remove-AppxPackage"
 powershell "Get-AppxPackage -Allusers *Microsoft.Windows.ContentDeliveryManager* | Remove-AppxPackage"
