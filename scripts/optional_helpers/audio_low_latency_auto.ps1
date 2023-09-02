@@ -94,3 +94,5 @@ Download-LAT
 Startup-Ask
 
 Execute-LAT
+
+cmd /c pause
