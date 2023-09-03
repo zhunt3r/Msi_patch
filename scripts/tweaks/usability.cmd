@@ -71,9 +71,6 @@ REG DELETE "HKEY_CURRENT_USER\AppEvents\Schemes\Apps\sapisvr\HubSleepSound\.Curr
 REG DELETE "HKEY_CURRENT_USER\AppEvents\Schemes\Apps\sapisvr\MisrecoSound\.Current" /ve /f
 REG DELETE "HKEY_CURRENT_USER\AppEvents\Schemes\Apps\sapisvr\PanelSound\.Current" /ve /f
 
-:: Disable auto-reboot after windows update are done
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\AU" /v NoAutorebootWithLoggedOnUser /t REG_DWORD /d 1 /f
-
 :: Disable Receive Updates for Other Microsoft Products
 powershell '(New-Object -com "Microsoft.Update.ServiceManager").RemoveService("7971f918-a847-4430-9279-4a52d1efe18d")'
 
@@ -184,6 +181,9 @@ REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v AutomaticMaintenanceEnabled /t REG_DWORD /d 0 /f
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v ScheduledInstallDay /t REG_DWORD /d 0 /f
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v ScheduledInstallTime /t REG_DWORD /d 5 /f
+
+:: Disable auto-reboot after windows update are done
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\AU" /v NoAutorebootWithLoggedOnUser /t REG_DWORD /d 1 /f
 
 :: Disable searches and warns
 REG ADD "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoLowDiskSpaceChecks /t REG_DWORD /d 1 /f

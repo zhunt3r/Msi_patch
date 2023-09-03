@@ -149,7 +149,7 @@ powershell "Get-AppxPackage -Allusers *SpotifyAB.SpotifyMusic* | Remove-AppxPack
 powershell "Get-AppxPackage -Allusers *WebExperience* | Remove-AppxPackage"
 
 :: Do not remove this, to install packages outside MS Store
-:: powershell "Get-AppxPackage "Microsoft.DesktopAppInstaller" | Remove-AppxPackage -ErrorAction SilentlyContinue"
+:: powershell "Get-AppxPackage Microsoft.DesktopAppInstaller | Remove-AppxPackage -ErrorAction SilentlyContinue"
 
 :: =============================================================================
 
