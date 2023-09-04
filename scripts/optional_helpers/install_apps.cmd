@@ -103,6 +103,9 @@ winget install -e --id Resplendence.LatencyMon
 :: Install Terminal
 winget install -e --id Microsoft.WindowsTerminal
 
+:: Video transcoder / encoder
+:: winget install -e --id HandBrake.HandBrake
+
 :: Replace File Explorer
 :: choco install files -y
 

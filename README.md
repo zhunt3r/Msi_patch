@@ -140,6 +140,8 @@ It doesnt mean they arent trustworthy, I don't know them, it just means it's not
   - <https://systeminformer.sourceforge.io/> (former Process Hacker)
   - <https://github.com/thebookisclosed/ViVe>
   - <https://github.com/vinaypamnani/wmie2>
+  - <https://www.privacytools.io/>
+  - <https://github.com/simeononsecurity/Windows-Optimize-Harden-Debloat>
 
 - Places that could be informative
   - <https://www.youtube.com/watch?v=6CB8P0-hJRQ>
