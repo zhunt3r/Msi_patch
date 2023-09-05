@@ -105,6 +105,7 @@ winget install -e --id Microsoft.WindowsTerminal
 
 :: Video transcoder / encoder
 :: winget install -e --id HandBrake.HandBrake
+:: winget install -e --id Microsoft.DotNet.DesktopRuntime.6
 
 :: Replace File Explorer
 :: choco install files -y
