@@ -54,6 +54,14 @@ Script can be found at [interrupt_moderation_usb.ps1](../scripts/optional_helper
 
 ---
 
+## GeoFence
+
+I have built a small GeoFence script to help with, to not be put in high ping servers in multiplayer games, it should work in any game if you get the proper information. Insctructions inside the script.
+
+Script can be found at [geofence_helper.ps1](../scripts/optional_helpers/geofence_helper.ps1)
+
+---
+
 ## Turn any 2D games into 3D SBS
 
 Useful if you have a supported 3D device or VR.
