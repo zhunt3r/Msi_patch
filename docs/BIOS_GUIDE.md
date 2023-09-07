@@ -1,10 +1,16 @@
 # BIOS
 
+# General
+
+- There are hidden BIOS settings that you can use at your own risk.
+  - <https://docs.google.com/document/d/1ILugrwtHfmisYzI1MdCOhSzBPuLJPi5D7xYJgQ4sxDM/edit#heading=h.aas727jxt9fk>
+  - <https://robbfps.notion.site/robbfps/BIOS-Optimization-Guide-a327a9b26c494220bb98ebdc5ad8d420>
+  - <https://github.com/amitxv/SCEWIN>
+  - Once you have exported, create a copy of BIOSSettings.txt as backup. Another thing you can do is, only leave those settings that you will modify, in BIOSSettings.txt, before import the changes.
+
 ## AMD
 
 > Note: My own settings, some will be different depending on your hardware. Some did bring performance/fps improvement.
-
-> Note2: There are even hidden BIOS settings that I currently am not using, if someone want to risk. <https://docs.google.com/document/d/1ILugrwtHfmisYzI1MdCOhSzBPuLJPi5D7xYJgQ4sxDM/edit#heading=h.aas727jxt9fk>
 
 > Note3: Ideally you would want Infinite Fabric Clock (FCLK) and Memory Controller Clock (UCLK) the same as Memory Clock.
 
