@@ -56,7 +56,8 @@ function Apply-Startup-Script {
 		$action = New-ScheduledTaskAction -Execute "$(Get-LAT)"
 		$delay = New-TimeSpan -Seconds 10
 		$trigger = New-ScheduledTaskTrigger -AtLogOn -RandomDelay $delay
-		$principal = New-ScheduledTaskPrincipal -UserID "LOCALSERVICE" -RunLevel Highest
+		$UserName = Get-CimInstance -ClassName Win32_ComputerSystem | Select-Object -ExpandProperty UserName
+		$principal = New-ScheduledTaskPrincipal -UserID $UserName -RunLevel Highest -LogonType Interactive
 		Register-ScheduledTask -TaskName $($TaskInfo.TaskName) -Action $action -Trigger $trigger -Principal $principal
 		[Environment]::NewLine
 
