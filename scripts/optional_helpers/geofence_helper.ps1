@@ -1,4 +1,4 @@
-# GeoFence in many cases are just firewall UDP IP blocking of servers / regions you do not want to be connected to. That can solve problems in games that do connect you outside your own region in which some cases are bad, since you are put into high ping servers.
+# GeoFence are just firewall UDP IP blocking of servers / regions you do not want to be connected to. That can solve problems in games that do connect you outside your own region in which some cases are bad, since you are put into high ping servers.
 
 # It can work in any game as long as you know the correct .exe location and the ips / ip ranges you want to block. In a multiplayer game, you can usually find the IPs in the support / wiki section.
 
@@ -31,6 +31,8 @@ New-NetFirewallRule -DisplayName "$RuleName-In" -Direction Inbound -Protocol Udp
 # In cases like Overwatch, if the IPs from the support/wiki are not enough, and you are still being put in high ping servers, you can press Ctrl+Shift+N and you will see the stats, the IP should be above, you can then use the first 2 decimals and build a range yourself. Use .0.0 in the from and .255.255 in the to. e.g., 35.228.0.0-35.228.255.255
 
 # You can also whitelist if you want, you Allow instead of Block and only put the IPs/IP-Ranges you want to connect to. Do whatever that which you are able to make it work.
+
+# Some games might redirect you to a server that works if the connection fails, others, it might just fail, if they try to put you in a server that is being blocked. You could lose the queue because of it. Be aware before doing this.
 
 # There are paid solutions, I would say that they are NOT worth. Since they are probably just doing this, but in a nicer UI.
 # Also, do not be fooled by VPN, this is not VPN and VPN will not GeoBlock anything unless they are specifically doing it per game inside their own firewall. Make no sense, since you can easily do it yourself.
