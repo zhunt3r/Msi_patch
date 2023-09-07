@@ -2,7 +2,7 @@
 
 # General
 
-- There are hidden BIOS settings that you can use at your own risk.
+- There are hidden BIOS settings that may bring improvements. You may alter values at your own risk.
   - <https://docs.google.com/document/d/1ILugrwtHfmisYzI1MdCOhSzBPuLJPi5D7xYJgQ4sxDM/edit#heading=h.aas727jxt9fk>
   - <https://robbfps.notion.site/robbfps/BIOS-Optimization-Guide-a327a9b26c494220bb98ebdc5ad8d420>
   - <https://github.com/amitxv/SCEWIN>
