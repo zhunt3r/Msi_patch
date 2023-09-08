@@ -19,9 +19,9 @@
 
 # You only need to alter $GameExeLocation and $IPs
 $GameExeLocation = "C:\...\YOUR_GAME.exe";
-$IPs = @("2.2.2.2", "123.1.32.2");
+$IPs = @("123.1.32.2", "1.2.0.0-1.2.255.255");
 
-$GameExeSplit = $GameExeLocation.Split("\")
+$GameExeSplit = $GameExeLocation.Split("\");
 $RuleName = "$($GameExeSplit[$GameExeSplit.Length - 1])-GeoFence";
 Remove-NetFirewallRule -DisplayName "$RuleName-Out" -ErrorAction SilentlyContinue;
 Remove-NetFirewallRule -DisplayName "$RuleName-In" -ErrorAction SilentlyContinue;
