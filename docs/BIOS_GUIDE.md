@@ -12,7 +12,7 @@
 
 > Note: My own settings, some will be different depending on your hardware. Some did bring performance/fps improvement.
 
-> Note3: Ideally you would want Infinite Fabric Clock (FCLK) and Memory Controller Clock (UCLK) the same as Memory Clock.
+> Note3: Ideally you would want Infinite Fabric Clock (FCLK) and Memory Controller Clock (UCLK) the same as Memory Clock, 1:1.
 
 > BIOS UPDATE: Use Ez Flash Utility in BIOS setup instead of USB or their software, if you have the option, less potential problems.
 
@@ -22,7 +22,7 @@
 - Eco Mode - **Disabled**
 - Monitor > CPU Fan Speed - **Disabled**
 - Curve Optimizer - **All Cores, Negative 20** - (It will depend on your machine, mine above 20 was causing random reboots with no errors)
-- PBO Limits - **PPT 125, TDC 90, EDC 130 or Motherboard Limit** - (Just Auto with new CPU)
+- PBO Limits - **PPT 125, TDC 90, EDC 130 or Motherboard Limit** - (Just Auto with new X3D CPU)
 - Max CPU Boost Clock Override - **200mhz**
 - Global C-State Control - **Disabled**
 - Above 4G Decoding - **Enabled**
