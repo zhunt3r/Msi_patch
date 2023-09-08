@@ -1,0 +1,99 @@
+// These are my personal changes, beyond the ones I already had disabled manually in BIOS setup.
+
+Setup Question	=  PS/2 Devices Support
+Help String	= If Disabled, PS/2 devices will be skipped.
+Token	=2E7	// Do NOT change this line
+Offset	=05
+Width	=01
+BIOS Default	=[01]Enabled 
+Options	=*[00]Disabled	// Move "*" to the desired Option
+         [01]Enabled
+
+Setup Question	= Chipset Power Saving Features
+Help String	= Chipset Power Saving Features
+Token	=2C5	// Do NOT change this line
+Offset	=CD
+Width	=01
+BIOS Default	=[01]Enabled 
+Options	=*[00]Disabled	// Move "*" to the desired Option
+         [01]Enabled
+
+Setup Question	= AB Clock Gating
+Help String	= Enable/Disable AB Internal Clock Gating
+Token	=277	// Do NOT change this line
+Offset	=85
+Width	=01
+BIOS Default	=[FF]Auto 
+Options	=*[00]Disabled	// Move "*" to the desired Option
+         [01]Enabled
+         [FF]Auto
+
+Setup Question	= PCIB Clock Run
+Help String	= Enable The Auto Clkrun Functionality
+Token	=278	// Do NOT change this line
+Offset	=86
+Width	=01
+BIOS Default	=[FF]Auto 
+Options	=*[00]Disabled	// Move "*" to the desired Option
+         [01]Enabled
+         [FF]Auto
+
+Setup Question	= Enable Hibernation
+Help String	= Enables or Disables System ability to Hibernate (OS/S4 Sleep State). This option may not be effective with some operating systems.
+Token	=19C	// Do NOT change this line
+Offset	=5B
+Width	=01
+BIOS Default	=1 
+Value	=1	// Enabled = 1, Disabled = 0 - # If this is disabled, audio will stop working for whatever power state reason.
+
+Setup Question	= Integrated Graphics
+Help String	= Enable Integrate Graphics Controller
+Token	=2D7	// Do NOT change this line
+Offset	=102
+Width	=01
+BIOS Default	=[FF]Auto 
+Options	=*[00]Disabled	// Move "*" to the desired Option
+         [02]Force
+         [FF]Auto
+
+Setup Question	= Aggressive Link PM Capability
+Help String	= Indicates Whether Host Bus Adapter (HBA) Can Support Auto-Generating Link Requests To The Partial Or Slumber States When There Are No Commands To Process
+Token	=29D	// Do NOT change this line
+Offset	=A4
+Width	=01
+BIOS Default	=[FF]Auto 
+Options	=*[00]Disabled	// Move "*" to the desired Option
+         [01]Enabled
+         [FF]Auto
+
+Setup Question	= ACPI Sleep State
+Help String	= Select the highest ACPI sleep state the system will enter when the SUSPEND button is pressed.
+Token	=19D	// Do NOT change this line
+Offset	=59
+Width	=02
+BIOS Default	=[02]S3 (Suspend to RAM) 
+Options	=*[00]Suspend Disabled	// Move "*" to the desired Option
+         [02]S3 (Suspend to RAM)
+
+Setup Question	= PSPP Policy
+Help String	= PCIe Speed Power Policy
+Token	=2D8	// Do NOT change this line
+Offset	=109
+Width	=01
+BIOS Default	=[FF]Auto 
+Options	=[00]Disabled	// Move "*" to the desired Option
+         *[01]Performance
+         [02]Balanced-High
+         [03]Balanced-Low
+         [04]Power Saving
+         [FF]Auto
+
+Setup Question	= USB Phy Power Down
+Help String	= Support for S4/S5 USB PHY Power Down
+Token	=2CB	// Do NOT change this line
+Offset	=D2
+Width	=01
+BIOS Default	=[FF]Auto 
+Options	=*[00]Disabled	// Move "*" to the desired Option
+         [01]Enabled
+         [FF]Auto
