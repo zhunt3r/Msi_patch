@@ -17,8 +17,8 @@
   Current Choices:
     - Reset all interrupt affinity related options
     - Enable MSI to everything that supports
-    - Change Priority to High and Disable MSI to both Mouse and LAN
-	- Higher interrupt limit to Mouse device controller
+    - Change Priority to High and Disable MSI to both Mouse and LAN - Some tests with different values were being done, in the if checks below the file.
+		- Higher interrupt limit to Mouse device controller and GPU
     - Apply each core (not thread) that is not 0 and is available to each type of devices that is being looked up (Mouse, LAN, GPU, Audio USB) and their proper parent device
     - Keyboard will be disabled by default
 
@@ -230,12 +230,17 @@ foreach ($item in $relevantData) {
 	if ($item.ClassType -eq 'Net') {
 		Set-ItemProperty -Path $childAffinityPath -Name "DevicePriority" -Value 3 -Force -Type Dword -ErrorAction Ignore
 		Set-ItemProperty -Path $childMsiPath -Name "MessageNumberLimit" -Value 2 -Force -Type Dword -ErrorAction Ignore
-		Set-ItemProperty -Path $childMsiPath -Name "MSISupported" -Value 0 -Force -Type Dword -ErrorAction Ignore
+		# Set-ItemProperty -Path $childMsiPath -Name "MSISupported" -Value 0 -Force -Type Dword -ErrorAction Ignore
 	}
 	if ($item.ClassType -eq 'Mouse') {
 	 	Set-ItemProperty -Path $parentAffinityPath -Name "DevicePriority" -Value 3 -Force -Type Dword -ErrorAction Ignore
-		Set-ItemProperty -Path $parentMsiPath -Name "MSISupported" -Value 0 -Force -Type Dword -ErrorAction Ignore
-		Set-ItemProperty -Path $parentMsiPath -Name "MessageNumberLimit" -Value 2048 -Force -Type Dword -ErrorAction Ignore
+		# Set-ItemProperty -Path $parentMsiPath -Name "MSISupported" -Value 0 -Force -Type Dword -ErrorAction Ignore
+
+		# You can even try 2048 if the device controller support MSI-X
+		Set-ItemProperty -Path $parentMsiPath -Name "MessageNumberLimit" -Value 32 -Force -Type Dword -ErrorAction Ignore
+	}
+	if ($item.ClassType -eq 'Display') {
+		Set-ItemProperty -Path $parentMsiPath -Name "MessageNumberLimit" -Value 32 -Force -Type Dword -ErrorAction Ignore
 	}
 
 	$coreData = $coresToBeUsed | Where-Object { $item.ClassType -eq $_.ClassType }
