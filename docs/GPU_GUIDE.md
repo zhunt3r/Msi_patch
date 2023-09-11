@@ -20,6 +20,8 @@
   - Alternative tool <https://displaycal.net/>
     - It can improve further than windows does, but it seems you need to keep it open
     - <https://www.youtube.com/watch?v=65VVCXBmnbs>
+- Run games in borderless mode (if not natively available)
+  - <https://www.pcgamingwiki.com/wiki/Glossary:Windowed>
 
 ## Nvidia
 
