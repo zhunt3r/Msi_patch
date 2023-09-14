@@ -1,6 +1,6 @@
 # GeoFence are just firewall UDP IP blocking of servers / regions you do not want to be connected to. That can solve problems in games that do connect you outside your own region in which some cases are bad, since you are put into high ping servers.
 
-# It can work in any game as long as you know the correct .exe location and the ips / ip ranges you want to block. In a multiplayer game, you can usually find the IPs in the support / wiki section.
+# It can work in any game as long as you know the correct .exe location and the ips / ip ranges you want to block. In a multiplayer game, you can usually find the IPs in the support / wiki section, but it can be outdated/incomplete information, therefore some you might have to get yourself directly or look elsewhere.
 
 # GeoFilter vs GeoFence - GeoFilter serves the purpose to block anything outside the radius of your own ip location, where GeoFence, you build different fences (radius like) in different locations and block everything that is not inside them. Pretty much concepts of ip blocking.
 
