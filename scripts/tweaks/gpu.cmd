@@ -331,6 +331,14 @@ REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Class\%GPU_DEVICE_C
 :: REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Class\%GPU_DEVICE_CLASS_GUID_WITH_KEY%" /v RMGpcTileMap /t REG_DWORD /d 0 /f
 :: REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Class\%GPU_DEVICE_CLASS_GUID_WITH_KEY%" /v TilePoolPagingMode /t REG_DWORD /d 0 /f
 :: REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Class\%GPU_DEVICE_CLASS_GUID_WITH_KEY%" /v enableMultiHeadsGpuScalingOnTiledMonitor /t REG_DWORD /d 0 /f
+
+:: Nvidia service preemption tweaks
+REG ADD "HKLM\SYSTEM\CurrentControlSet\Services\nvlddmkm" /v DisablePreemption /t REG_DWORD /d 1 /f
+REG ADD "HKLM\SYSTEM\CurrentControlSet\Services\nvlddmkm" /v DisableCudaContextPreemption /t REG_DWORD /d 1 /f
+REG ADD "HKLM\SYSTEM\CurrentControlSet\Services\nvlddmkm" /v EnableCEPreemption /t REG_DWORD /d 0 /f
+REG ADD "HKLM\SYSTEM\CurrentControlSet\Services\nvlddmkm" /v DisablePreemptionOnS3S4 /t REG_DWORD /d 1 /f
+REG ADD "HKLM\SYSTEM\CurrentControlSet\Services\nvlddmkm" /v ComputePreemption /t REG_DWORD /d 0 /f
+
 )
 
 :: AMD GPU tweaks

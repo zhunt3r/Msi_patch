@@ -84,3 +84,15 @@ for /F "eol=E" %%a in ('REG QUERY "HKEY_LOCAL_MACHINE\System\CurrentControlSet\S
 		SET STR=!STR:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\=!
 	)
 )
+
+for /L %%V in (0,1,3) do (
+		REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power\EnergyEstimation\Storage\NVME\IdleState\%%V" /v IdleExitEnergyMicroJoules /t REG_DWORD /d 0 /f
+		REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power\EnergyEstimation\Storage\NVME\IdleState\%%V" /v IdleExitLatencyMs /t REG_DWORD /d 0 /f
+		REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power\EnergyEstimation\Storage\NVME\IdleState\%%V" /v IdlePowerMw /t REG_DWORD /d 0 /f
+		REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power\EnergyEstimation\Storage\NVME\IdleState\%%V" /v IdleTimeLengthMs /t REG_DWORD /d 0xffffffff /f
+
+		REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power\EnergyEstimation\Storage\SD\IdleState\%%V" /v IdleExitEnergyMicroJoules /t REG_DWORD /d 0 /f
+		REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power\EnergyEstimation\Storage\SD\IdleState\%%V" /v IdleExitLatencyMs /t REG_DWORD /d 0 /f
+		REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power\EnergyEstimation\Storage\SD\IdleState\%%V" /v IdlePowerMw /t REG_DWORD /d 0 /f
+		REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power\EnergyEstimation\Storage\SD\IdleState\%%V" /v IdleTimeLengthMs /t REG_DWORD /d 0xffffffff /f
+)

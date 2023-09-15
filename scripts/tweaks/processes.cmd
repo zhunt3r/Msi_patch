@@ -143,6 +143,7 @@ REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Exe
 
 :: Tweak I/O worker
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\I/O System" /v PassiveIntRealTimeWorkerPriority /t REG_DWORD /d 18 /f
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\I/O System" /v CountOperations /t REG_DWORD /d 0 /f
 
 :: Enable threaded dpc on sr-iov
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\mlx4_bus\Parameters" /v ThreadDpcEnable /t REG_DWORD /d 1 /f
