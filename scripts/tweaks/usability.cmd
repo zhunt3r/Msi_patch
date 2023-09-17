@@ -617,9 +617,6 @@ REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\SQMClient\Windows" /v CEIPEnable 
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\SQMClient\Windows" /v CEIPEnable /t REG_DWORD /d 0 /f
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VSCommon\15.0\SQM" /v OptIn /t REG_DWORD /d 0 /f
 
-:: Disable on device soft removal
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\usbhub\hubg" /v DisableOnSoftRemove /t REG_DWORD /d 1 /f
-
 :: Remove print from context menu
 REG ADD "HKEY_CLASSES_ROOT\SystemFileAssociations\image\shell\print" /v ProgrammaticAccessOnly /t REG_SZ /d "" /f
 for %%a in (
