@@ -1,4 +1,5 @@
-// These are my personal changes, beyond the ones I already had disabled manually in BIOS setup.
+// These are my personal changes, beyond the ones I already had disabled manually in BIOS setup. You dont need the whole dump, only the ones you will modify.
+// You need your own HIICrc32= code.
 
 Setup Question	=  PS/2 Devices Support
 Help String	= If Disabled, PS/2 devices will be skipped.

@@ -20,3 +20,7 @@ erase /f /s /q %systemdrive%\windows\softwaredistribution\*.* && rmdir /s /q %sy
 
 :: Remove all bloatware from start menu - Win11
 erase /s /f /q %localappdata%\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState\*.*
+
+:: Remove Windows Defender Program Data folders
+call %~dp0\..\optional_helpers\run_minsudo "del /s /f /q %ProgramData%\Microsoft\Windows Defender"
+call %~dp0\..\optional_helpers\run_minsudo "del /s /f /q %ProgramData%\Microsoft\Windows Defender Advanced Threat Protection"
