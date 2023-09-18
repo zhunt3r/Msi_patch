@@ -156,7 +156,7 @@ REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\MSMQ\Parameters" /v TCPNoDelay /t
 for /f %%r in ('REG QUERY "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces" /f 1 /d /s^|Findstr HKEY_') do (
 	REG ADD %%r /v NonBestEffortLimit /t Reg_DWORD /d 0 /f
 	REG ADD %%r /v DeadGWDetectDefault /t Reg_DWORD /d 1 /f
-	REG ADD %%r /v PerformRouterDiscovery /t Reg_DWORD /d 1"/f
+	REG ADD %%r /v PerformRouterDiscovery /t Reg_DWORD /d 1 /f
 	REG ADD %%r /v TCPNoDelay /t Reg_DWORD /d 1 /f
 	REG ADD %%r /v TcpAckFrequency /t Reg_DWORD /d 1 /f
 	REG ADD %%r /v TcpInitialRTT /t Reg_DWORD /d 2 /f
