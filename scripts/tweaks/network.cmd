@@ -154,15 +154,15 @@ REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\MSMQ\Parameters" /v TCPNoDelay /t
 
 :: Tweak Tcpip interfaces
 for /f %%r in ('REG QUERY "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces" /f 1 /d /s^|Findstr HKEY_') do (
-	REG ADD %%r /v NonBestEffortLimit /t Reg_DWORD /d 0 /f
-	REG ADD %%r /v DeadGWDetectDefault /t Reg_DWORD /d 1 /f
-	REG ADD %%r /v PerformRouterDiscovery /t Reg_DWORD /d 1 /f
-	REG ADD %%r /v TCPNoDelay /t Reg_DWORD /d 1 /f
-	REG ADD %%r /v TcpAckFrequency /t Reg_DWORD /d 1 /f
-	REG ADD %%r /v TcpInitialRTT /t Reg_DWORD /d 2 /f
-	REG ADD %%r /v TcpDelAckTicks /t Reg_DWORD /d 0 /f
-	REG ADD %%r /v UseZeroBroadcast /t Reg_DWORD /d 0 /f
-	REG ADD %%r /v InterfaceMetric /t Reg_DWORD /d 55 /f
+	REG ADD %%r /v NonBestEffortLimit /t REG_DWORD /d 0 /f
+	REG ADD %%r /v DeadGWDetectDefault /t REG_DWORD /d 1 /f
+	REG ADD %%r /v PerformRouterDiscovery /t REG_DWORD /d 1 /f
+	REG ADD %%r /v TCPNoDelay /t REG_DWORD /d 1 /f
+	REG ADD %%r /v TcpAckFrequency /t REG_DWORD /d 1 /f
+	REG ADD %%r /v TcpInitialRTT /t REG_DWORD /d 2 /f
+	REG ADD %%r /v TcpDelAckTicks /t REG_DWORD /d 0 /f
+	REG ADD %%r /v UseZeroBroadcast /t REG_DWORD /d 0 /f
+	REG ADD %%r /v InterfaceMetric /t REG_DWORD /d 55 /f
 )
 
 :: Disable IPV6
