@@ -229,8 +229,12 @@ foreach ($item in $relevantData) {
 
 	if ($item.ClassType -eq 'Net') {
 		Set-ItemProperty -Path $childAffinityPath -Name "DevicePriority" -Value 3 -Force -Type Dword -ErrorAction Ignore
-		Set-ItemProperty -Path $childMsiPath -Name "MessageNumberLimit" -Value 2 -Force -Type Dword -ErrorAction Ignore
-		Set-ItemProperty -Path $childMsiPath -Name "MSISupported" -Value 0 -Force -Type Dword -ErrorAction Ignore
+
+		# I noticed a very fast and responsive feeling when hitting shots after newly updated network.cmd script with better RSS tweaks, making better usage of the CPU which combined with the enabling MSI-X (Ethernet has support) and setting it to 2048. 
+		# I never had this feeling before, snappier, before it was, as if there were a sort of very small delay before the hit got to the target. This is on Overwatch 2.
+		Set-ItemProperty -Path $childMsiPath -Name "MessageNumberLimit" -Value 2048 -Force -Type Dword -ErrorAction Ignore
+		
+		# Set-ItemProperty -Path $childMsiPath -Name "MSISupported" -Value 0 -Force -Type Dword -ErrorAction Ignore
 	}
 	if ($item.ClassType -eq 'Mouse') {
 	 	Set-ItemProperty -Path $parentAffinityPath -Name "DevicePriority" -Value 3 -Force -Type Dword -ErrorAction Ignore
