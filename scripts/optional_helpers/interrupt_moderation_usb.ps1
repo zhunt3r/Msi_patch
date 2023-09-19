@@ -22,6 +22,23 @@
 
 	-------------------------
 
+	I've been questioned more than once, about my script and the counter part that was implemented after my implementation, but mine has more lines of code while the other one has less.
+	I will write a few points on what my script have that the other one does not.
+
+	1- I bring information starting from the top, as to facilitate understanding about the subject.
+	2- I use a utility that does not require you to modify any sort of registry or disable anything.
+	3- My code is automated from the start.
+	4- It has a auto download for the utility if you only want to run the script standalone.
+	5- It has a auto startup functionality so you do not need to execute the script yourself every windows startup.
+	6- I bring clarity in my code from the first steps straight from the documentation, where the counter part takes shorts combined code as to have less line of code. Usually much harder to understand why with a straight read.
+	7- I bring support to both XHCI and EHCI, while the counter part only seem to support XHCI.
+	8- I provide information about every device and addresses as to provide you with accurate information about everything.
+	9- I provide information if your devices have no interrupters available.
+
+	I suppose all these points should clarify on why my script has more lines of code. Less is not always more.
+
+	-------------------------
+
 	In case you get problems running the script in Win11, you can run the command to allow, and after, another to set back to a safer or undefined policy. But if you have set to be run at every startup, you might want to keep the bypass without changing it back.
 
 	You can check the current policy settings
