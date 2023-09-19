@@ -22,6 +22,11 @@
     - Apply each core (not thread) that is not 0 and is available to each type of devices that is being looked up (Mouse, LAN, GPU, Audio USB) and their proper parent device
     - Keyboard will be disabled by default
 
+	---------------------------
+
+	If a device has both MSI and MSI-X, MSI-X will take precedence and hard limit is the size of the vector. Regardless of the value set, it will be capped on that limit, this is based on a documentation, unless proven otherwise.
+	https://docs.kernel.org/PCI/msi-howto.html#using-msi
+
   ---------------------------
 
   In case you get problems running the script in Win11, you can run the command to allow, and after, another to set back to a safe or undefined policy
