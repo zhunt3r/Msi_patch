@@ -284,7 +284,7 @@ function Execute-IMOD-Process {
 			$AllInterrupters = Get-All-Interrupters -preAddressInDecimal $FirstInterrupterData.Interrupter0PreAddressInDecimal -interruptersAmount $InterruptersAmount
 
 			foreach ($interrupterItem in $AllInterrupters) {
-				$DisableResult = Disable-IMOD -address $interrupterItem.ValueAddress
+				$DisableResult = Disable-IMOD -address $interrupterItem.InterrupterAddress
 				Write-Host "Disabled IMOD - Interrupter $($interrupterItem.Interrupter) - Interrupter Address: $($interrupterItem.InterrupterAddress) - Value Address: $($interrupterItem.ValueAddress) - Result: $DisableResult"
 			}
 		}
