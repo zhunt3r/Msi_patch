@@ -244,6 +244,7 @@ function Disable-IMOD {
 	if (![string]::IsNullOrWhiteSpace($value)) { $ValueData = $value }
 	$Value = & "$(Get-KX)" /WrMem32 $address $valueData
 	while ([string]::IsNullOrWhiteSpace($Value)) { Start-Sleep -Seconds 1 }
+	return $Value
 }
 
 function Get-All-Interrupters {
@@ -283,14 +284,14 @@ function Execute-IMOD-Process {
 			$AllInterrupters = Get-All-Interrupters -preAddressInDecimal $FirstInterrupterData.Interrupter0PreAddressInDecimal -interruptersAmount $InterruptersAmount
 
 			foreach ($interrupterItem in $AllInterrupters) {
-				Disable-IMOD -address $interrupterItem.ValueAddress
-				Write-Host "Disabled IMOD - Interrupter $($interrupterItem.Interrupter) - Interrupter Address $($interrupterItem.InterrupterAddress) - Value Address $($interrupterItem.ValueAddress)"
+				$DisableResult = Disable-IMOD -address $interrupterItem.ValueAddress
+				Write-Host "Disabled IMOD - Interrupter $($interrupterItem.Interrupter) - Interrupter Address: $($interrupterItem.InterrupterAddress) - Value Address: $($interrupterItem.ValueAddress) - Result: $DisableResult"
 			}
 		}
 		if ($item.Type -eq 'EHCI') {
 			$InterruptData = Build-Interrupt-Threshold-Control-Data -memoryRange $item.MemoryRange
-			Disable-IMOD -address $InterruptData.InterruptAddress -value $InterruptData.ValueAddress
-			Write-Host "Disabled Interrupt Threshold Control - Interrupt Address $($InterruptData.InterruptAddress) - Value Address $($InterruptData.ValueAddress)"
+			$DisableResult = Disable-IMOD -address $InterruptData.InterruptAddress -value $InterruptData.ValueAddress
+			Write-Host "Disabled Interrupt Threshold Control - Interrupt Address: $($InterruptData.InterruptAddress) - Value Address: $($InterruptData.ValueAddress) - Result: $DisableResult"
 		}
 
 		[Environment]::NewLine

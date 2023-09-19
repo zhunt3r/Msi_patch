@@ -18,12 +18,9 @@
     - Reset all interrupt affinity related options
     - Enable MSI to everything that supports
     - Change Priority to High and Disable MSI on Mouse device controller
-	- Higher interrupt limit to Mouse device controller and GPU
+    - Higher interrupt limit to Mouse device controller and GPU
     - Apply each core (not thread) that is not 0 and is available to each type of devices that is being looked up (Mouse, LAN, GPU, Audio USB) and their proper parent device
     - Keyboard will be disabled by default
-
-
-  From what I understood, to activate MSI-X seem to have lower latency than both non MSI and MSI itself, you can by enabling MSI and setting the number higher than 32 if the device have support for it. You would essentially tell the driver that you want like that.
 
   ---------------------------
 
@@ -232,20 +229,12 @@ foreach ($item in $relevantData) {
 
 	if ($item.ClassType -eq 'Net') {
 		Set-ItemProperty -Path $childAffinityPath -Name "DevicePriority" -Value 3 -Force -Type Dword -ErrorAction Ignore
-
-		# I noticed a very fast and responsive feeling when hitting shots after newly updated network.cmd script with better RSS tweaks, making better usage of the CPU which combined with the enabling MSI-X (Ethernet has support) and setting it to 2048.
-		# I never had this feeling before, snappier, before it was, as if there were a sort of very small delay before the hit got to the target. This is on Overwatch 2.
-		# It seem to make sense, since more RSS queues, packets are processed faster.
-		# I reconfirm this, certanly very noticeable results. It's also like, the receive of the packets are processed faster and the hitbox are more in sync (maybe?), what I experienced is that the shots and close hits like healing when with baptiste, just connect like never before. 
-		# I think all this was the missing piece in solving the hitreg problem, at least for me.
 		Set-ItemProperty -Path $childMsiPath -Name "MessageNumberLimit" -Value 2048 -Force -Type Dword -ErrorAction Ignore
 	}
 	if ($item.ClassType -eq 'Mouse') {
 	 	Set-ItemProperty -Path $parentAffinityPath -Name "DevicePriority" -Value 3 -Force -Type Dword -ErrorAction Ignore
 		Set-ItemProperty -Path $parentMsiPath -Name "MSISupported" -Value 0 -Force -Type Dword -ErrorAction Ignore
-
-		# You can even try 2048 if the device controller support MSI-X, but I am not sure how hard limits work, to know if they are ignored or not. You would need it to have MSISupported as 1.
-		Set-ItemProperty -Path $parentMsiPath -Name "MessageNumberLimit" -Value 32 -Force -Type Dword -ErrorAction Ignore
+		Set-ItemProperty -Path $parentMsiPath -Name "MessageNumberLimit" -Value 2048 -Force -Type Dword -ErrorAction Ignore
 	}
 	if ($item.ClassType -eq 'Display') {
 		Set-ItemProperty -Path $childMsiPath -Name "MessageNumberLimit" -Value 32 -Force -Type Dword -ErrorAction Ignore
