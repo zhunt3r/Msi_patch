@@ -232,7 +232,9 @@ foreach ($item in $relevantData) {
 
 		# I noticed a very fast and responsive feeling when hitting shots after newly updated network.cmd script with better RSS tweaks, making better usage of the CPU which combined with the enabling MSI-X (Ethernet has support) and setting it to 2048.
 		# I never had this feeling before, snappier, before it was, as if there were a sort of very small delay before the hit got to the target. This is on Overwatch 2.
-		# It seem to make sense, since more RSS are suppose to process packets faster.
+		# It seem to make sense, since more RSS queues, packets are processed faster.
+		# I reconfirm this, certanly very noticeable results. It's also like, the receive of the packets are processed faster and the hitbox are more in sync (maybe?), what I experienced is that the shots just connect like never before. 
+		# I think all this was the missing piece in solving the hitreg problem, at least for me.
 		Set-ItemProperty -Path $childMsiPath -Name "MessageNumberLimit" -Value 2048 -Force -Type Dword -ErrorAction Ignore
 
 		# Set-ItemProperty -Path $childMsiPath -Name "MSISupported" -Value 0 -Force -Type Dword -ErrorAction Ignore
