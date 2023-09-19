@@ -2,6 +2,9 @@
 for /f "tokens=2 delims==" %%a in ('wmic cpu get NumberOfCores /value') do set /a CoresQty=%%a
 for /f "tokens=2 delims==" %%a in ('wmic cpu get NumberOfLogicalProcessors /value') do set /a LogicalProcessorsQty=%%a
 
+:: Set MTU value
+set /a MTU=1400
+
 :: Optmize network card settings
 powershell Set-NetOffloadGlobalSetting -ReceiveSegmentCoalescing Disabled -ErrorAction SilentlyContinue
 powershell Set-NetOffloadGlobalSetting -PacketCoalescingFilter Disabled -ErrorAction SilentlyContinue
@@ -120,7 +123,7 @@ netsh interface ip set interface ethernet weakhostreceive=enabled
 :: https://www.cloudflare.com/learning/network-layer/what-is-mtu/ - Dont mind about MSS, that is based on the MTU value.
 :: In the internet, you will find many repetitions of the same thing and that is not complete, probably one copied from the other without fully understanding. Not that I do.
 :: To see the current MTU value set in Windows, use: netsh interface ipv4 show subinterface
-netsh interface ipv4 set subinterface "Ethernet" mtu=1400 store=persistent
+netsh interface ipv4 set subinterface "Ethernet" mtu=%MTU% store=persistent
 
 ipconfig /flushdns
 ipconfig /release
@@ -371,11 +374,8 @@ REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\AFD\Parameters" /v
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\AFD\Parameters" /v StandardAddressLength /t REG_DWORD /d 1024 /f
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\AFD\Parameters" /v transmitIoLength /t REG_DWORD /d 4294967295 /f
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\AFD\Parameters" /v DoNotHoldNicBuffers /t REG_DWORD /d 1 /f
-:: Checking, same value as MTU 1400 or the recommended by Nvidia 64k
-:: I read you set 1500 / MTU value if traditional network or 64k if jumbo frames are available.
-:: It seems that the recommended value by nvidia is based on their network device for datacenters. So, might not be the best for traditional hardwares after all. I could be wrong though.
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\AFD\Parameters" /v FastSendDatagramThreshold /t REG_DWORD /d 1500 /f
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\AFD\Parameters" /v FastCopyReceiveThreshold /t REG_DWORD /d 1500 /f
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\AFD\Parameters" /v FastSendDatagramThreshold /t REG_DWORD /d %MTU% /f
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\AFD\Parameters" /v FastCopyReceiveThreshold /t REG_DWORD /d %MTU% /f
 
 :: Disable NetBIOS (partial with services)
 for /f %%i in ('REG QUERY "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\NetBT\Parameters\Interfaces" /s /f "NetbiosOptions"^| findstr "HKEY"') do REG ADD "%%i" /v NetbiosOptions /t REG_DWORD /d 2 /f >nul 2>&1
