@@ -24,8 +24,10 @@
 
 	---------------------------
 
-	If a device has both MSI and MSI-X, MSI-X will take precedence and hard limit is the size of the vector. Regardless of the value set, it will be capped on that limit, this is based on a documentation, unless proven otherwise.
+	If a device has both MSI and MSI-X, MSI-X will take precedence and hard limit is the size of the vector. Regardless of the value set, it will be capped on that limit, this is based on a documentation.
 	https://docs.kernel.org/PCI/msi-howto.html#using-msi
+
+	Even though there are cases of driver manufactors setting a higher limit, nothing is proven that they are in fact bypassing that hard limit. But still it could be a possibility as if setting the vector size, but it's not been confirmed. It would require verification.
 
   ---------------------------
 
