@@ -240,7 +240,7 @@ foreach ($item in $relevantData) {
 	}
 	if ($item.ClassType -eq 'Mouse') {
 	 	Set-ItemProperty -Path $parentAffinityPath -Name "DevicePriority" -Value 3 -Force -Type Dword -ErrorAction Ignore
-		Set-ItemProperty -Path $parentMsiPath -Name "MSISupported" -Value 0 -Force -Type Dword -ErrorAction Ignore
+		Set-ItemProperty -Path $parentMsiPath -Name "MSISupported" -Value 1 -Force -Type Dword -ErrorAction Ignore
 		Set-ItemProperty -Path $parentMsiPath -Name "MessageNumberLimit" -Value 2048 -Force -Type Dword -ErrorAction Ignore
 	}
 	if ($item.ClassType -eq 'Display') {
